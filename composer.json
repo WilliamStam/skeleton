@@ -1,0 +1,43 @@
+{
+  "name": "frameworks/slim",
+  "description": "Slim Framework",
+  "minimum-stability": "dev",
+  "license": "proprietary",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "William Stam",
+      "email": "william@munsoft.co.za"
+    }
+  ],
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true,
+    "platform": {
+      "php": "7.4"
+    }
+  },
+  "require": {
+    "ext-curl": "*",
+    "ext-gd": "*",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*",
+    "intervention/image": "^2",
+    "laminas/laminas-escaper": "^2",
+    "php-di/php-di": "^6",
+    "psr/log": "^1",
+    "slim/psr7": "dev-master",
+    "slim/slim": "^4",
+    "slim/php-view": "^3",
+    "zeuxisoo/slim-whoops": "^0.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "System\\": "system/",
+      "Modules\\": "modules/",
+      "App\\": "app/"
+    }
+  }
+}

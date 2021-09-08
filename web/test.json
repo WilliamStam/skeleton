@@ -1,0 +1,200 @@
+{
+  "id": null,
+  "version": "0.0.1",
+  "route": "/api/test[/{id}]",
+  "PROFILER": {
+    "url": "/api/test",
+    "method": "[GET]",
+    "items": [
+      {
+        "label": "System\\DB\\Mysql::connect",
+        "component": "System\\DB",
+        "time": {
+          "start": 1631101667.292016,
+          "end": 1631101667.293178,
+          "total": 1.1620521545410156,
+          "offset": "0.00",
+          "percent": "5.73"
+        },
+        "memory": {
+          "start": 1732848,
+          "end": 1781152,
+          "total": 48304,
+          "percent": "3.67"
+        },
+        "data": null,
+        "key": "704e488149120fb987260ed8f51cb911"
+      },
+      {
+        "label": "http://skeleton.localhost/api/test",
+        "component": "Route",
+        "time": {
+          "start": 1631101667.301444,
+          "end": 1631101667.312305,
+          "total": 10.860919952392578,
+          "offset": 46.43,
+          "percent": "53.57"
+        },
+        "memory": {
+          "start": 2424848,
+          "end": 3042864,
+          "total": 618016,
+          "percent": "46.97"
+        },
+        "data": null,
+        "key": "c3b9f03322aae778488c296c0d1d4b80"
+      },
+      {
+        "label": "App\\Middleware\\SessionMiddleware::start",
+        "component": "App\\Middleware",
+        "time": {
+          "start": 1631101667.30145,
+          "end": 1631101667.301983,
+          "total": 0.5331039428710938,
+          "offset": "46.50",
+          "percent": "2.63"
+        },
+        "memory": {
+          "start": 2425008,
+          "end": 2426904,
+          "total": 1896,
+          "percent": "0.14"
+        },
+        "data": null,
+        "key": "e1de2f0bbc03d9c0fc4460802febf6d1"
+      },
+      {
+        "label": "System\\DB\\Mysql::exec",
+        "component": "System\\DB",
+        "time": {
+          "start": 1631101667.301571,
+          "end": 1631101667.301963,
+          "total": 0.3921985626220703,
+          "offset": "47.09",
+          "percent": "1.93"
+        },
+        "memory": {
+          "start": 2426232,
+          "end": 2446888,
+          "total": 20656,
+          "percent": "1.57"
+        },
+        "data": [
+          "SELECT * FROM system_sessions WHERE session_id = :SESSION",
+          {
+            "SESSION": "6e6jgal3tok2fevpjjo1uk5ueg"
+          }
+        ],
+        "key": "e2dbefbf9c0f8d100d685131e97db654"
+      },
+      {
+        "label": "App\\Middleware\\SystemMiddleware::__invoke",
+        "component": "App\\Middleware",
+        "time": {
+          "start": 1631101667.307693,
+          "end": 1631101667.307736,
+          "total": 0.04291534423828125,
+          "offset": "77.27",
+          "percent": "0.21"
+        },
+        "memory": {
+          "start": 2892008,
+          "end": 2892208,
+          "total": 200,
+          "percent": "0.02"
+        },
+        "data": null,
+        "key": "6ef78636132a7add39a1f987224fd315"
+      },
+      {
+        "label": "App\\Middleware\\ModuleMiddleware::__invoke",
+        "component": "App\\Middleware",
+        "time": {
+          "start": 1631101667.307789,
+          "end": 1631101667.307796,
+          "total": 0.0069141387939453125,
+          "offset": "77.74",
+          "percent": "0.03"
+        },
+        "memory": {
+          "start": 2893448,
+          "end": 2893448,
+          "total": 0,
+          "percent": "0.00"
+        },
+        "data": null,
+        "key": "3263e8b058fcbd95607f940649236d28"
+      },
+      {
+        "label": "App\\Middleware\\CacheControlMiddleware::__invoke",
+        "component": "App\\Middleware",
+        "time": {
+          "start": 1631101667.310251,
+          "end": 1631101667.310267,
+          "total": 0.015974044799804688,
+          "offset": "89.88",
+          "percent": "0.08"
+        },
+        "memory": {
+          "start": 3039840,
+          "end": 3040352,
+          "total": 512,
+          "percent": "0.04"
+        },
+        "data": null,
+        "key": "8bd2ffff5a59337baeac4584e51b7553"
+      },
+      {
+        "label": "App\\Middleware\\SessionMiddleware::save",
+        "component": "App\\Middleware",
+        "time": {
+          "start": 1631101667.310337,
+          "end": 1631101667.312295,
+          "total": 1.9578933715820312,
+          "offset": "90.30",
+          "percent": "9.66"
+        },
+        "memory": {
+          "start": 3039752,
+          "end": 3043768,
+          "total": 4016,
+          "percent": "0.31"
+        },
+        "data": null,
+        "key": "efc4a6ee6e99a66d16fca36c325352ef"
+      },
+      {
+        "label": "System\\DB\\Mysql::exec",
+        "component": "System\\DB",
+        "time": {
+          "start": 1631101667.310526,
+          "end": 1631101667.31229,
+          "total": 1.764059066772461,
+          "offset": "91.23",
+          "percent": "8.70"
+        },
+        "memory": {
+          "start": 3042688,
+          "end": 3048688,
+          "total": 6000,
+          "percent": "0.46"
+        },
+        "data": [
+          "INSERT INTO system_sessions ( `session_id`, `data`, `ip`, `proxy_ip`, `agent`, `timestamp` ) VALUES ( :SESSION, :DATA, :IP, :PROXY_IP, :AGENT, UNIX_TIMESTAMP() ) ON DUPLICATE KEY UPDATE `data` = VALUES(`data`), `ip` = VALUES(`ip`), `proxy_ip` = VALUES(`proxy_ip`), `agent` = VALUES(`agent`), `timestamp` = VALUES(`timestamp`)",
+          {
+            "SESSION": "6e6jgal3tok2fevpjjo1uk5ueg",
+            "DATA": "{\n    \"CSRF\": \"b05f9da7727082e1ed8002806e530170\",\n    \"CSRF_NAME\": \"csrf_name\",\n    \"CSRF_TOKEN\": \"csrf_tokens\"\n}",
+            "IP": "::1",
+            "PROXY_IP": null,
+            "AGENT": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36 Edg/93.0.961.38"
+          }
+        ],
+        "key": "25a61ec186714c9f804ccff097c965e5"
+      }
+    ],
+    "total": {
+      "time": 20.273923873901367,
+      "memory": 1315840
+    }
+  }
+}

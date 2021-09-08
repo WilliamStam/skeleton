@@ -1,0 +1,138 @@
+<template>
+    <button type="button" class="btn btn-primary" @click="modal.show()">
+        Launch demo modal
+    </button>
+    <div class="modal fade" ref="exampleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" @click="modal.hide()" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @click="modal.hide()">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+
+                <button class="nav-link" @click.prevent="setActive('home')" :class="{ active: isActive('home') }" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">
+
+
+                    Home
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" @click.prevent="setActive('profile')" :class="{ active: isActive('profile') }" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">
+                    Profile
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" @click.prevent="setActive('contact')" :class="{ active: isActive('contact') }" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">
+                    Contact
+                </button>
+            </li>
+        </ul>
+        <div v-if="response">data:
+            <span>{{ response.tab }}</span> -
+            <span>{{ response.date }}</span>
+<!--            only response.version shows in the test.json. the api has other options but for packaging purposes...-->
+            <span>{{ response.version }}</span>
+
+        </div>
+        <div v-else>Loading...</div>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade" :class="{ 'active show': isActive('home') }" id="home" role="tabpanel" aria-labelledby="home-tab">
+                home
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" :class="{ 'active show': isActive('profile') }" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                profile
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 88%"></div>
+                </div>
+            </div>
+            <div class="tab-pane fade" :class="{ 'active show': isActive('contact') }" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                contact
+
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 25%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <!--        <fa icon="user-secret" style="color:red;"></fa>-->
+        <!--        <fa icon="download" style="color:green;"></fa>-->
+        <!--        <fa icon="grin-squint-tears" style="color:blue;"></fa>-->
+    </div>
+    <div>
+        <button type="button" class="btn btn-primary">Primary</button>
+        <button type="button" class="btn btn-secondary">Secondary</button>
+        <button type="button" class="btn btn-success">Success</button>
+        <button type="button" class="btn btn-danger">Danger</button>
+        <button type="button" class="btn btn-warning">Warning</button>
+        <button type="button" class="btn btn-info">Info</button>
+        <button type="button" class="btn btn-light">Light</button>
+        <button type="button" class="btn btn-dark">Dark</button>
+
+        <button type="button" class="btn btn-link">Link</button>
+    </div>
+</template>
+<script>
+import {
+    Modal,
+    Tab
+} from "bootstrap";
+import api from "@/composables/api";
+
+// import ApiCallModel from "@/models/system/api";
+
+export default {
+    name: "App",
+    // mixins: [api],
+    data: () => ({
+        modal: null,
+        tabs: null,
+        activeItem: "home",
+        response: undefined,
+    }),
+    mounted() {
+        this.modal = new Modal(this.$refs.exampleModal);
+        this.tabs = new Tab(this.$refs.myTab);
+        this.getData();
+    },
+    methods: {
+        isActive(menuItem) {
+            return this.activeItem === menuItem;
+        },
+        setActive(menuItem) {
+            this.activeItem = menuItem;
+            this.getData();
+        },
+        async getData(){
+
+            // just forcing the response to be empty while it loads new content
+           this.response = undefined;
+
+            this.response = await api.get(`test.json?tab=${this.activeItem}`);
+            // this.response = await api.get(`/api/test/tab/${this.activeItem}`);
+
+            // this.response = await FetchApi(`/api/test/tab/${this.activeItem}`,{}, "test");
+            // this.response = await FetchApi(`/api/test/tab/${this.activeItem}`,{});
+            // this.response = await FetchApi(`/api/test/tab/${this.activeItem}`,{});
+
+        }
+    }
+};
+</script>
