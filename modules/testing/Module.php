@@ -19,6 +19,7 @@ class Module extends AbstractModule {
 //            $group->get("",HomeController::class)->setName("testing_home");
             $group->get("[/{id}]",HomeController::class)->setName("test_home");
             $group->get("/tab/{tab}",TabController::class)->setName("home_tab");
+            $group->post("/tab/{tab}",TabController::class)->setName("home_tab_post");
 
 
 

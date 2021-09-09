@@ -40,11 +40,29 @@
                 </button>
             </li>
         </ul>
-        <div v-if="response">data:
-            <span>{{ response.tab }}</span> -
-            <span>{{ response.date }}</span>
+        <div v-if="response">
+            <div>tab: {{ response.tab }}</div>
+            <div>date: {{ response.date }}</div>
 <!--            only response.version shows in the test.json. the api has other options but for packaging purposes...-->
-            <span>{{ response.version }}</span>
+            <div>version: {{ response.version }}</div>
+            <div>random: {{ response.r }}</div>
+            <div>get:
+            <template v-for="(v,k) in response.get" :key="k">
+                <div class="ms-4">{{ k }}: {{ v }}</div>
+
+            </template>
+            </div>
+            <div>post:
+            <template v-for="(v,k) in response.post" :key="k">
+                <div class="ms-4">{{ k }}: {{ v }}</div>
+            </template>
+            </div>
+            <div>headers:
+            <template v-for="(v,k) in response.headers" :key="k">
+                <div class="ms-4">{{ k }}: {{ v }}</div>
+
+            </template>
+            </div>
 
         </div>
         <div v-else>Loading...</div>
@@ -90,6 +108,7 @@
     </div>
 </template>
 <script>
+/* eslint-disable */
 import {
     Modal,
     Tab
@@ -125,8 +144,20 @@ export default {
             // just forcing the response to be empty while it loads new content
            this.response = undefined;
 
-            this.response = await api.get(`test.json?tab=${this.activeItem}`);
-            // this.response = await api.get(`/api/test/tab/${this.activeItem}`);
+           if (this.activeItem == "contact"){
+               this.response = await api.post(`/api/test/tab/${this.activeItem}?fish=grrr`,{r:Math.random(),y: "p"});
+           } else {
+               this.response = await api.get(`/api/test/tab/${this.activeItem}?fish=cakes`,{r:Math.random(),y: "g"},{
+                   key: "request-"+this.activeItem,
+                   headers:{
+                       "x-sexy":"ola"
+                   }
+               });
+           }
+
+
+
+
 
             // this.response = await FetchApi(`/api/test/tab/${this.activeItem}`,{}, "test");
             // this.response = await FetchApi(`/api/test/tab/${this.activeItem}`,{});

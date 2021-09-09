@@ -1,68 +1,131 @@
 import axios, {
-  AxiosError,
-  // AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse
+    AxiosError,
+    // AxiosInstance,
+    AxiosRequestConfig,
+    AxiosResponse
 } from "axios";
-import {useStore} from "@/store";
 
+import {ApiCall} from "@/store/api/api";
+
+import {useStore} from "@/store";
+import {objectToQueryString} from "@/utilities/serialize";
+import md5 from "@/utilities/md5";
+// import {replaceObjectValues} from "@/utilities/objects";
 
 const store = useStore();
 
+interface AxiosRequestAPIConfig extends AxiosRequestConfig {
+    key?: string
+}
+
+interface AxiosResponseAPI extends AxiosResponse {
+    config: AxiosRequestAPIConfig
+}
 
 axios.defaults.timeout = 2500;
 
-const requestInterceptor = (req: AxiosRequestConfig): AxiosRequestConfig => {
-  req.headers['request-startTime'] = new Date().getTime();
-  console.log("request wroks");
-  return req;
+const requestInterceptor = (req: AxiosRequestAPIConfig): AxiosRequestAPIConfig => {
+    req.headers['request-startTime'] = new Date().getTime();
+
+    console.log("HEADERS",req.headers);
+
+    if (!req.key){
+        req.key = md5(req.url + "|" + req.method + "|" + req.data);
+    }
+
+    const previous_requests = store.getters["api/getList"].map((item:ApiCall) => {
+        if (item.key == req.key){
+            console.log("MUST CANCEL THIS RESPONSE",item)
+        }
+
+    });
+
+
+    console.log("PREVIOUS REQUESTS",previous_requests);
+
+
+    console.log("check if ",req.key,"is active and cancel it if it is");
+
+     store.dispatch("api/add", {
+         key: req.key,
+         instance: this,
+     });
+
+    console.log("request key",req.key,req);
+    return req;
 };
 
-const successInterceptor = (response: AxiosResponse): AxiosResponse => {
-  console.log("success wroks");
+const responseInterceptor = (response: AxiosResponseAPI): AxiosResponseAPI => {
+    console.log("success wroks");
 
-  const currentTime = new Date().getTime()
-  const startTime = response.config.headers['request-startTime'];
-  response.headers['request-duration'] = currentTime - startTime;
+    const currentTime = new Date().getTime()
+    const startTime = response.config.headers['request-startTime'];
+    response.headers['request-duration'] = currentTime - startTime;
 
-  const profiler = response.data.PROFILER;
-  profiler.total.request = response.headers['request-duration'];
+    if ("PROFILER" in response.data){
+        const profiler = response.data.PROFILER;
+        profiler.total.request = response.headers['request-duration'];
+        store.dispatch("profiler/add", profiler);
+        console.log(profiler);
+        delete response.data.PROFILER;
+    }
 
+    // console.log("response key",response.config.key);
+    console.log("remove ",response.config.key,"from active")
 
-  store.dispatch("profiler/add", profiler);
-  console.log(profiler);
-  delete response.data.PROFILER;
-  return response;
+    return response;
 };
 
 const errorInterceptor = (err: AxiosError) => {
-  return Promise.reject(err);
+    return Promise.reject(err);
 };
 
 axios.interceptors.request.use(requestInterceptor);
 axios.interceptors.response.use(
-  (res) => successInterceptor(res),
-  (err) => errorInterceptor(err)
+    (res) => responseInterceptor(res),
+    (err) => errorInterceptor(err)
 );
 
-
+type EmptyKeyValueObject = {
+    [key: string]: number | string | boolean,
+}
 
 const api = {
-    get(url:string): Promise<unknown> {
+    get(url: string, params: EmptyKeyValueObject = {}, options: AxiosRequestAPIConfig = {}): Promise<unknown> {
+
+        if (url.includes("?")) {
+            url += "&" + objectToQueryString(params)
+        } else {
+            url += "?" + objectToQueryString(params)
+        }
+
+        // axios_config.options = options;
+
+        return new Promise((resolve, reject) => {
+            axios
+                .get(url, options)
+                .then((response: AxiosResponseAPI) => {
+                    resolve(response.data);
+                })
+                .catch((error: AxiosError) => {
+                    reject(error);
+                });
+        });
+    },
+    post(url: string, params: EmptyKeyValueObject = {}, options: AxiosRequestAPIConfig = {}): Promise<unknown> {
 
 
-      return new Promise((resolve, reject) => {
-        axios
-          .get(url)
-          .then((response: AxiosResponse) => {
-            console.log("resolving data");
-            resolve(response.data);
-          })
-          .catch((error: AxiosError) => {
-            reject(error);
-          });
-      });
-  }
+        return new Promise((resolve, reject) => {
+            axios
+                .post(url,params, options)
+                .then((response: AxiosResponseAPI) => {
+                    resolve(response.data);
+                })
+                .catch((error: AxiosError) => {
+                    reject(error);
+                });
+        });
+    }
 }
 export default api;
 

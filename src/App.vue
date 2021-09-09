@@ -31,37 +31,15 @@
 }
 </style>
 
-<script lang="ts">
-
-
-
+<script >
+/* eslint-disable */
 import PageProfiler from "@/components/PageProfiler.vue"; // @ is an alias to /src
 import { useStore } from '@/store';
 
 export default {
     components: {PageProfiler},
     setup() {
-        // const axios: any = inject('axios');  // inject axios
-        //
-        // const api_base : string = "http://skeleton.localhost/api";
 
-        // interface getDataCallable {
-        //   (name: object): object;
-        // }
-
-        // const getData = (url: string, params: object, callback: getDataCallable): void => {
-        //     axios
-        //         .get(`${api_base}${url}`)
-        //         .then((response: { data: any }) => {
-        //             console.log(response.data)
-        //
-        //         });
-        // };
-
-        // return {getData}
-
-
-        // console.log(profiler);
 
     },
     created () {
@@ -72,23 +50,11 @@ export default {
         if (profiler_item.url){
             store.dispatch("profiler/add",profiler_item);
         }
-        // console.log(window.profiler)
-        // this.$store.profiler.dispatch('addProfiler',{
-        //     "url":"/woof",
-        //     "method":"aahhhh",
-        //     "items":[]
-        // });
+
     }
 
 
 
 }
-//
-//
-// defineComponent({
-//   name: "Profiler",
-//   components: {
-//     Profiler,
-//   },
-// });
+
 </script>

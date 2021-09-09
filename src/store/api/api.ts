@@ -1,11 +1,15 @@
 import {AxiosInstance} from 'axios'
 import { Commit } from 'vuex';
+
+
+type EmptyKeyValueObject = {
+    [key: string]: number | string,
+}
+
 export interface ApiCall {
     key: string,
     instance: AxiosInstance,
-    options: {
-
-    }
+    options: EmptyKeyValueObject
 }
 export interface ApiState {
     list: Array<ApiCall>
@@ -18,17 +22,18 @@ export default {
     }),
     mutations: {
         add(state: ApiState, item: ApiCall): void {
-            // console.log("mutation addProfiler", item)
             state.list.push(item);
-
         }
     },
     actions: {
         add({commit}: { commit: Commit}, item: ApiCall): void {
-
             commit("add", item)
-
         }
     },
+    getters: {
+        getList : (state:ApiState) : Array<ApiCall> =>{
+            return state.list;
+        },
+    }
 }
 

@@ -23,16 +23,18 @@ class TabController {
 
         $data = array();
         $data['tab'] = $this->system->get("PARAMS.tab");
+        $data['r'] = $this->system->get("GET.r");
+        $data['version'] = $this->system->get("VERSION");
         $data['date'] = date("Y-m-d H:i:s");
+        $data['get'] = $this->system->get("GET");
+        $data['post'] = $this->system->get("POST");
+        $data['headers'] = $request->getHeaders();
 
 
-//        $profiler = $this->profiler->start("test 1");
-//        sleep(1);
-//        $profiler_inner = $this->profiler->start("profiler inner","Testing");
-//        sleep(1);
-//
-//        $profiler_inner->stop();
-//        $profiler->stop();
+        $profiler = $this->profiler->start("test 1");
+        sleep(1);
+
+        $profiler->stop();
 
         return $this->responder->withJson($response, $data);
     }

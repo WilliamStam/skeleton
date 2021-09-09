@@ -1,4 +1,4 @@
-<template>
+<template v-if="profiler_list">
     <div class="layout-profiler">
         <div>profiler: {{ profiler }}</div>
         <button type="button" class="btn btn-primary" @click="modal.show()">
@@ -151,9 +151,14 @@
 }
 </style>
 <script >
+/* eslint-disable */
 import {
     Modal,
 } from "bootstrap";
+
+import {
+    formatNumber
+} from "@/utilities/formatters/numbers";
 
 export default {
     name: "PageProfiler",
@@ -167,19 +172,11 @@ export default {
     },
     computed: {
         profiler_list() {
-            console.log("PROFILER LIST",this.$store.state.profiler.list)
             return this.$store.state.profiler.list;
-        }
+        },
     },
     methods: {
-
-        formatNumber(value, decimals = 2) {
-            let val = (value / 1);
-            if (decimals) {
-                val = val.toFixed(decimals);
-            }
-            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-        },
+        formatNumber,
         toggleDataRow(id) {
             this.selectedRecord = this.selectedRecord == id ? undefined : id;
         }
