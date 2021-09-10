@@ -30,6 +30,11 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
+                <button class="nav-link" @click.prevent="setActive('logs')" :class="{ active: isActive('logs') }" id="home-logs" data-bs-toggle="tab" data-bs-target="#logs" type="button" role="tab" aria-controls="logs" aria-selected="true">
+                    Logs
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
                 <button class="nav-link" @click.prevent="setActive('profile')" :class="{ active: isActive('profile') }" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">
                     Profile
                 </button>
@@ -43,26 +48,26 @@
         <div v-if="response">
             <div>tab: {{ response.tab }}</div>
             <div>date: {{ response.date }}</div>
-<!--            only response.version shows in the test.json. the api has other options but for packaging purposes...-->
+            <!--            only response.version shows in the test.json. the api has other options but for packaging purposes...-->
             <div>version: {{ response.version }}</div>
             <div>random: {{ response.r }}</div>
             <div>get:
-            <template v-for="(v,k) in response.get" :key="k">
-                <div class="ms-4">{{ k }}: {{ v }}</div>
+                <template v-for="(v,k) in response.get" :key="k">
+                    <div class="ms-4">{{ k }}: {{ v }}</div>
 
-            </template>
+                </template>
             </div>
             <div>post:
-            <template v-for="(v,k) in response.post" :key="k">
-                <div class="ms-4">{{ k }}: {{ v }}</div>
-            </template>
+                <template v-for="(v,k) in response.post" :key="k">
+                    <div class="ms-4">{{ k }}: {{ v }}</div>
+                </template>
             </div>
-            <div>headers:
-            <template v-for="(v,k) in response.headers" :key="k">
-                <div class="ms-4">{{ k }}: {{ v }}</div>
+            <!--            <div>headers:-->
+            <!--            <template v-for="(v,k) in response.headers" :key="k">-->
+            <!--                <div class="ms-4">{{ k }}: {{ v }}</div>-->
 
-            </template>
-            </div>
+            <!--            </template>-->
+            <!--            </div>-->
 
         </div>
         <div v-else>Loading...</div>
@@ -71,6 +76,26 @@
                 home
                 <div class="progress">
                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" :class="{ 'active show': isActive('logs') }" id="logs" role="tabpanel" aria-labelledby="home-logs">
+                logs
+
+                <div v-if="response">
+                    <template v-for="log in response.logs" :key="log.id">
+                        <div class="row border-bottom">
+                            <div class="col-1">{{ log.id }}</div>
+                            <div class="col-2">{{ log.datetime }}</div>
+                            <div class="col-4">{{ log.log }}</div>
+                            <div class="col">{{ log.context }}</div>
+
+                        </div>
+                    </template>
+
+                </div>
+                <div v-else>
+                    loading still
                 </div>
 
             </div>
@@ -114,12 +139,13 @@ import {
     Tab
 } from "bootstrap";
 import api from "@/composables/api";
+import state from "@/composables/state";
+
 
 // import ApiCallModel from "@/models/system/api";
 
 export default {
     name: "App",
-    // mixins: [api],
     data: () => ({
         modal: null,
         tabs: null,
@@ -130,33 +156,47 @@ export default {
         this.modal = new Modal(this.$refs.exampleModal);
         this.tabs = new Tab(this.$refs.myTab);
         this.getData();
+
+
+        console.log(state)
+        // state.set("test", "fish");
+
     },
     methods: {
         isActive(menuItem) {
             return this.activeItem === menuItem;
         },
         setActive(menuItem) {
-            this.activeItem = menuItem;
+            // this.activeItem = state.set("tab", "woof");
+
+
             this.getData();
         },
-        async getData(){
+        async getData() {
 
             // just forcing the response to be empty while it loads new content
-           this.response = undefined;
+            this.response = undefined;
 
-           if (this.activeItem == "contact"){
-               this.response = await api.post(`/api/test/tab/${this.activeItem}?fish=grrr`,{r:Math.random(),y: "p"});
-           } else {
-               this.response = await api.get(`/api/test/tab/${this.activeItem}?fish=cakes`,{r:Math.random(),y: "g"},{
-                   key: "request-"+this.activeItem,
-                   headers:{
-                       "x-sexy":"ola"
-                   }
-               });
-           }
+            this.activeItem = this.activeItem;
+            // this.activeItem = this.getState("tab") || "home";
 
-
-
+            if (this.activeItem == "contact") {
+                this.response = await api.post(`/api/test/tab/${this.activeItem}?fish=grrr`, {
+                    r: Math.random(),
+                    y: "p"
+                });
+            } else {
+                this.response = await api.get(`/api/test/tab/${this.activeItem}?fish=cakes`, {
+                    r: Math.random(),
+                    y: "g"
+                }, {
+                    key: "request-" + this.activeItem,
+                    headers: {
+                        "x-sexy": "ola1"
+                    },
+                    loading: true
+                });
+            }
 
 
             // this.response = await FetchApi(`/api/test/tab/${this.activeItem}`,{}, "test");

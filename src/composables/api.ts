@@ -27,7 +27,7 @@ axios.defaults.timeout = 2500;
 const requestInterceptor = (req: AxiosRequestAPIConfig): AxiosRequestAPIConfig => {
     req.headers['request-startTime'] = new Date().getTime();
 
-    console.log("HEADERS",req.headers);
+    // console.log("HEADERS",req.headers);
 
     if (!req.key){
         req.key = md5(req.url + "|" + req.method + "|" + req.data);
@@ -35,16 +35,16 @@ const requestInterceptor = (req: AxiosRequestAPIConfig): AxiosRequestAPIConfig =
 
     const previous_requests = store.getters["api/getList"].map((item:ApiCall) => {
         if (item.key == req.key){
-            console.log("MUST CANCEL THIS RESPONSE",item)
+            // console.log("MUST CANCEL THIS RESPONSE",item)
         }
 
     });
 
 
-    console.log("PREVIOUS REQUESTS",previous_requests);
+    // console.log("PREVIOUS REQUESTS",previous_requests);
 
 
-    console.log("check if ",req.key,"is active and cancel it if it is");
+    // console.log("check if ",req.key,"is active and cancel it if it is");
 
      store.dispatch("api/add", {
          key: req.key,
@@ -52,12 +52,12 @@ const requestInterceptor = (req: AxiosRequestAPIConfig): AxiosRequestAPIConfig =
          config: req
      });
 
-    console.log("request key",req.key,req);
+    // console.log("request key",req.key,req);
     return req;
 };
 
 const responseInterceptor = (response: AxiosResponseAPI): AxiosResponseAPI => {
-    console.log("success wroks");
+    // console.log("success wroks");
 
     const currentTime = new Date().getTime()
     const startTime = response.config.headers['request-startTime'];
@@ -67,12 +67,12 @@ const responseInterceptor = (response: AxiosResponseAPI): AxiosResponseAPI => {
         const profiler = response.data.PROFILER;
         profiler.total.request = response.headers['request-duration'];
         store.dispatch("profiler/add", profiler);
-        console.log(profiler);
+        // console.log(profiler);
         delete response.data.PROFILER;
     }
 
     // console.log("response key",response.config.key);
-    console.log("remove ",response.config.key,"from active")
+    // console.log("remove ",response.config.key,"from active")
 
     return response;
 };

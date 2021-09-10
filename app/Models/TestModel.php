@@ -11,30 +11,21 @@ use System\DB\Query;
 class TestModel extends AbstractModel {
     use QueryTrait;
 
-
     protected $ID = null;
     protected $DATA = array();
 
-    const TABLE = "system_users";
+    const TABLE = "system_logs";
     const PK = "id";
 
     protected $QUERY = array(
         "select"=>"
-            system_users.*
+            system_logs.*
         ",
         "from"=>"
-            system_users 
+            system_logs 
         ",
         "group"=>"
-            system_users.id
+            system_logs.id
         "
     );
-
-
-
-
-
-
-
-
 }

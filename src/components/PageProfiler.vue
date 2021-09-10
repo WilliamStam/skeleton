@@ -168,7 +168,7 @@ export default {
     }),
     mounted() {
         this.modal = new Modal(this.$refs.systemProfilerModal);
-        console.log("profiler mounted");
+        // console.log("profiler mounted");
     },
     computed: {
         profiler_list() {

@@ -17,10 +17,12 @@ class TestSchema extends AbstractSchema implements SchemaInterface {
 
         return array(
             "id"=>$item->id,
-            "name"=>$item->name,
-            "email"=>$item->email,
-            "active"=>$item->active,
-            "selected"=>$selected
+            "version"=>$item->version,
+            "datetime"=>$item->datetime,
+            "level"=>$item->level,
+            "log"=>$item->log,
+            "context"=>json_decode($item->context,true),
+            "selected"=>$item->id == $selected
 
         );
 

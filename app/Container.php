@@ -150,6 +150,7 @@ return [
         ))->fromFile("../config.php");
     },
 
+
 //    Profiler::class => function (ContainerInterface $container) {
 //        return new Profiler();
 //    },
@@ -239,7 +240,7 @@ return [
         $errors->addHandler(new Error(
             $loggers->getByLevel(\Psr\Log\LogLevel::DEBUG)->toArray(),
             404,
-            "no page here, looser"
+            "no page here, looser!"
         ), 404);
 
         $errors->addHandler(new Error(

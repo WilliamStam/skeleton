@@ -8,7 +8,7 @@ class Profiler extends Collection {
 
 
     function start(string $label, string $component = ""): ProfilerItem {
-        return $this->add(new ProfilerItem($label, $component));
+        return $this->add((new ProfilerItem($label, $component)));
     }
 
     function getTotalTime() {
