@@ -49,6 +49,7 @@ const requestInterceptor = (req: AxiosRequestAPIConfig): AxiosRequestAPIConfig =
      store.dispatch("api/add", {
          key: req.key,
          instance: this,
+         config: req
      });
 
     console.log("request key",req.key,req);

@@ -9,7 +9,7 @@ type EmptyKeyValueObject = {
 export interface ApiCall {
     key: string,
     instance: AxiosInstance,
-    options: EmptyKeyValueObject
+    config: EmptyKeyValueObject
 }
 export interface ApiState {
     list: Array<ApiCall>
