@@ -41,9 +41,7 @@ class Session {
 
         $this->data = Arrays::merge((array)$this->data,(array)json_decode($this->handler->read($this->getId()), true));
 
-        if (!$this->has("CSRF_NAME")){
-            $this->set("CSRF_NAME","csrf_name");
-        }
+
         if (!$this->has("CSRF_TOKEN")){
             $this->set("CSRF_TOKEN","csrf_tokens");
         }

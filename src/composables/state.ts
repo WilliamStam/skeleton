@@ -1,29 +1,29 @@
-import { defineComponent, ref } from "vue";
-import { useRouter, useRoute } from 'vue-router'
+import {ref} from "vue";
+// import { useRouter, useRoute } from 'vue-router'
 
 export default {
-  setup() {
-    const state = ref({})
+    setup() {
+        const state = ref({})
 
-    const router = useRouter()
-    const route = useRoute()
 
-    const set = (key:string,value:string) => {
-        console.log("setting query",key,"to",value)
-        // const updated_state = state.value;
-        // updated_state[key] = value;
-        // state.value = updated_state
-      // router.push({
-      //   name: 'search',
-      //   query: {
-      //     ...route.query,
-      //   },
-      // })
-    }
+        const set = (key: string, value: string): string => {
+            console.log("setting query", key, "to", value)
+            // const updated_state = state.value;
+            // updated_state[key] = value;
+            // state.value = updated_state
+            // router.push({
+            //   name: 'search',
+            //   query: {
+            //     ...route.query,
+            //   },
+            // })
 
-    return {
-      state,
-      set
-    }
-  },
+            return value;
+        }
+
+        return {
+            state,
+            set
+        }
+    },
 }

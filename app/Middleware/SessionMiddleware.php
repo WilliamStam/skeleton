@@ -31,6 +31,9 @@ class SessionMiddleware {
         $profiler = $this->profiler->start(__CLASS__ . "::start", __NAMESPACE__);
         $GLOBALS['output'](get_class($this) . " start");
 
+
+//        setId
+
         if (!$this->session->isStarted()) {
             $this->session->start();
         }
@@ -49,7 +52,7 @@ class SessionMiddleware {
 
 //        var_dump("system end");
         $GLOBALS['output'](get_class($this) . " end");
-        return $handler;
+        return $handler->withHeader("SID",$this->session->getId());
 
     }
 

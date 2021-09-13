@@ -46,6 +46,8 @@ class VueController {
         $data = array();
 
         $data['debug'] = $this->system->get("DEBUG");
+        $data['session'] = $request->getAttribute("SESSION")->getId();
+
 
 
 

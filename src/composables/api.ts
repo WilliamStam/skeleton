@@ -14,7 +14,7 @@ import md5 from "@/utilities/md5";
 
 const store = useStore();
 
-interface AxiosRequestAPIConfig extends AxiosRequestConfig {
+export interface AxiosRequestAPIConfig extends AxiosRequestConfig {
     key?: string
 }
 
@@ -26,6 +26,7 @@ axios.defaults.timeout = 2500;
 
 const requestInterceptor = (req: AxiosRequestAPIConfig): AxiosRequestAPIConfig => {
     req.headers['request-startTime'] = new Date().getTime();
+    req.headers['session'] = "";
 
     // console.log("HEADERS",req.headers);
 

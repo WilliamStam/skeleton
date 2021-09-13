@@ -1,15 +1,13 @@
 import {AxiosInstance} from 'axios'
 import { Commit } from 'vuex';
+import {AxiosRequestAPIConfig} from '@/composables/api'
 
 
-type EmptyKeyValueObject = {
-    [key: string]: number | string,
-}
 
 export interface ApiCall {
     key: string,
     instance: AxiosInstance,
-    config: EmptyKeyValueObject
+    config: AxiosRequestAPIConfig
 }
 export interface ApiState {
     list: Array<ApiCall>

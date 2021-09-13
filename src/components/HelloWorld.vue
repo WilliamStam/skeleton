@@ -2,6 +2,7 @@
     <button type="button" class="btn btn-primary" @click="modal.show()">
         Launch demo modal
     </button>
+    <button @click="removeState('tab')">remove tab</button>
     <div class="modal fade" ref="exampleModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -62,12 +63,12 @@
                     <div class="ms-4">{{ k }}: {{ v }}</div>
                 </template>
             </div>
-            <!--            <div>headers:-->
-            <!--            <template v-for="(v,k) in response.headers" :key="k">-->
-            <!--                <div class="ms-4">{{ k }}: {{ v }}</div>-->
+                        <div>headers:
+                        <template v-for="(v,k) in response.headers" :key="k">
+                            <div class="ms-4">{{ k }}: {{ v }}</div>
 
-            <!--            </template>-->
-            <!--            </div>-->
+                        </template>
+                        </div>
 
         </div>
         <div v-else>Loading...</div>
@@ -119,6 +120,8 @@
         <!--        <fa icon="download" style="color:green;"></fa>-->
         <!--        <fa icon="grin-squint-tears" style="color:blue;"></fa>-->
     </div>
+
+    <div>State: {{ state }}</div>
     <div>
         <button type="button" class="btn btn-primary">Primary</button>
         <button type="button" class="btn btn-secondary">Secondary</button>
@@ -139,13 +142,15 @@ import {
     Tab
 } from "bootstrap";
 import api from "@/composables/api";
-import state from "@/composables/state";
+// import state from "@/composables/state";
+import state from "@/mixins/state";
 
 
 // import ApiCallModel from "@/models/system/api";
 
 export default {
     name: "App",
+    mixins: [state],
     data: () => ({
         modal: null,
         tabs: null,
@@ -155,30 +160,39 @@ export default {
     mounted() {
         this.modal = new Modal(this.$refs.exampleModal);
         this.tabs = new Tab(this.$refs.myTab);
-        this.getData();
 
+        this.setState("test",Math.random(),"tab-change")
 
-        console.log(state)
         // state.set("test", "fish");
 
+        this.state.tab = this.state.tab || "profile"
+        this.$emit('updatePage',this.state.tab);
+
+        this.getData();
+    },
+    emits : {
+        updatePage(){
+            console.log("updatePage")
+            console.log(this)
+        }
     },
     methods: {
         isActive(menuItem) {
-            return this.activeItem === menuItem;
+            return  this.state.tab === menuItem;
         },
         setActive(menuItem) {
-            // this.activeItem = state.set("tab", "woof");
 
+            this.activeItem = this.setState("tab",menuItem,"updatePage");
+            this.getData()
 
-            this.getData();
         },
         async getData() {
 
             // just forcing the response to be empty while it loads new content
             this.response = undefined;
 
-            this.activeItem = this.activeItem;
-            // this.activeItem = this.getState("tab") || "home";
+            // this.activeItem = this.activeItem;
+            this.activeItem = this.getState("tab");
 
             if (this.activeItem == "contact") {
                 this.response = await api.post(`/api/test/tab/${this.activeItem}?fish=grrr`, {

@@ -33,11 +33,13 @@ class TabController {
         $data['get'] = $this->system->get("GET");
         $data['post'] = $this->system->get("POST");
 
-
+        $data['sid'] = $this->system->get("SESSION")->getId();
+        $data['sid2'] = $request->getAttribute("SESSION")->getId();
 
         $data['logs'] = $this->testmodel->getAll()->withFilter(function($item){
             return $item->level == "error"; // this filters after you already have a collection. this isnt filtering on the db side
         })->toSchema($this->testschema,"2");
+
 
 
 
