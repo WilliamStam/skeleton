@@ -35,6 +35,10 @@ class TabController {
 
         $data['sid'] = $this->system->get("SESSION")->getId();
         $data['sid2'] = $request->getAttribute("SESSION")->getId();
+        $data['csrf'] = $request->getAttribute("SESSION")->get("CSRF");
+        $data['csrfs'] = array("@@CSRF_NAME@@"=>"@@CSRF@@");
+
+
 
         $data['logs'] = $this->testmodel->getAll()->withFilter(function($item){
             return $item->level == "error"; // this filters after you already have a collection. this isnt filtering on the db side

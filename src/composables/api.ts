@@ -5,18 +5,17 @@ import axios, {
     AxiosResponse
 } from "axios";
 
-import {ApiCall} from "@/store/api/api";
 
 import {useStore} from "@/store";
 import {objectToQueryString} from "@/utilities/serialize";
 import md5 from "@/utilities/md5";
-// import {replaceObjectValues} from "@/utilities/objects";
 
 const store = useStore();
 
 export interface AxiosRequestAPIConfig extends AxiosRequestConfig {
     key?: string
 }
+
 
 interface AxiosResponseAPI extends AxiosResponse {
     config: AxiosRequestAPIConfig
@@ -34,12 +33,12 @@ const requestInterceptor = (req: AxiosRequestAPIConfig): AxiosRequestAPIConfig =
         req.key = md5(req.url + "|" + req.method + "|" + req.data);
     }
 
-    const previous_requests = store.getters["api/getList"].map((item:ApiCall) => {
-        if (item.key == req.key){
-            // console.log("MUST CANCEL THIS RESPONSE",item)
-        }
-
-    });
+    // const previous_requests = store.getters["api/getList"].map((item:ApiCall) => {
+    //     if (item.key == req.key){
+    //         // console.log("MUST CANCEL THIS RESPONSE",item)
+    //     }
+    //
+    // });
 
 
     // console.log("PREVIOUS REQUESTS",previous_requests);
@@ -47,7 +46,7 @@ const requestInterceptor = (req: AxiosRequestAPIConfig): AxiosRequestAPIConfig =
 
     // console.log("check if ",req.key,"is active and cancel it if it is");
 
-     store.dispatch("api/add", {
+     store.dispatch("api/addActive", {
          key: req.key,
          instance: this,
          config: req
@@ -67,18 +66,24 @@ const responseInterceptor = (response: AxiosResponseAPI): AxiosResponseAPI => {
     if ("PROFILER" in response.data){
         const profiler = response.data.PROFILER;
         profiler.total.request = response.headers['request-duration'];
-        store.dispatch("profiler/add", profiler);
+        store.dispatch("api/addProfiler", profiler);
         // console.log(profiler);
         delete response.data.PROFILER;
     }
 
-    // console.log("response key",response.config.key);
+    store.dispatch("api/removeActive",response.config.key);
+
+
     // console.log("remove ",response.config.key,"from active")
 
     return response;
 };
 
 const errorInterceptor = (err: AxiosError) => {
+    const config: AxiosRequestAPIConfig = err.config;
+
+
+    store.dispatch("api/removeActive",config.key);
     return Promise.reject(err);
 };
 

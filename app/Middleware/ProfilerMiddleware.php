@@ -64,11 +64,11 @@ class ProfilerMiddleware {
             $response = $response->withBody($this->streamFactory->createStream($body));
 //            $response->getBody()->write($body);
 
-            $this->replace->set("@@TIMER@@",$this->profiler->getTotalTime());
-            $this->replace->set("@@MEMORY@@",$this->profiler->getTotalMemory());
-
-            $response = $response->withHeader("x-profiler-time", $this->profiler->getTotalTime());
-            $response = $response->withHeader("x-profiler-memory", $this->profiler->getTotalMemory());
+//            $this->replace->set("@@TIMER@@",$this->profiler->getTotalTime());
+//            $this->replace->set("@@MEMORY@@",$this->profiler->getTotalMemory());
+//
+//            $response = $response->withHeader("x-profiler-time", $this->profiler->getTotalTime());
+//            $response = $response->withHeader("x-profiler-memory", $this->profiler->getTotalMemory());
         }
 
         $GLOBALS['output'](get_class($this) . " end");

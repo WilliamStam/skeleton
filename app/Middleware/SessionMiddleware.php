@@ -34,10 +34,10 @@ class SessionMiddleware {
 
 //        setId
 
+
         if (!$this->session->isStarted()) {
             $this->session->start();
         }
-
 
 
         //    $this->get(System::class)->set("ROUTE", $route);

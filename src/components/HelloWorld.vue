@@ -1,26 +1,10 @@
 <template>
-    <button type="button" class="btn btn-primary" @click="modal.show()">
-        Launch demo modal
-    </button>
-    <button @click="removeState('tab')">remove tab</button>
-    <div class="modal fade" ref="exampleModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="btn-close" @click="modal.hide()" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @click="modal.hide()">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
+
     <div>
+        <h1>
+            active requests: [{{ loadingRequests }}]
+        </h1>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
 
@@ -63,12 +47,23 @@
                     <div class="ms-4">{{ k }}: {{ v }}</div>
                 </template>
             </div>
-                        <div>headers:
+
+            <p>
+                <a class="btn link mt-4" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    Headers
+                </a>
+            </p>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <div>headers:
                         <template v-for="(v,k) in response.headers" :key="k">
                             <div class="ms-4">{{ k }}: {{ v }}</div>
 
                         </template>
-                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
         <div v-else>Loading...</div>
@@ -142,15 +137,13 @@ import {
     Tab
 } from "bootstrap";
 import api from "@/composables/api";
-// import state from "@/composables/state";
-import state from "@/mixins/state";
-
+import {watch} from "vue";
+import {mapGetters} from "vuex";
 
 // import ApiCallModel from "@/models/system/api";
 
 export default {
     name: "App",
-    mixins: [state],
     data: () => ({
         modal: null,
         tabs: null,
@@ -158,46 +151,43 @@ export default {
         response: undefined,
     }),
     mounted() {
-        this.modal = new Modal(this.$refs.exampleModal);
         this.tabs = new Tab(this.$refs.myTab);
 
-        this.setState("test",Math.random(),"tab-change")
+        watch(() => this.activeItem, (newVal) => {
+            this.getData();
 
-        // state.set("test", "fish");
-
-        this.state.tab = this.state.tab || "profile"
-        this.$emit('updatePage',this.state.tab);
-
+        });
         this.getData();
+
     },
-    emits : {
-        updatePage(){
-            console.log("updatePage")
-            console.log(this)
+    computed: {
+        loadingRequests() {
+            return this.$store.getters["api/showLoading"];
         }
     },
     methods: {
+
+
         isActive(menuItem) {
-            return  this.state.tab === menuItem;
+            return this.activeItem === menuItem;
         },
         setActive(menuItem) {
-
-            this.activeItem = this.setState("tab",menuItem,"updatePage");
-            this.getData()
-
+            this.activeItem = menuItem;
         },
+
+
         async getData() {
 
             // just forcing the response to be empty while it loads new content
             this.response = undefined;
 
-            // this.activeItem = this.activeItem;
-            this.activeItem = this.getState("tab");
 
             if (this.activeItem == "contact") {
                 this.response = await api.post(`/api/test/tab/${this.activeItem}?fish=grrr`, {
                     r: Math.random(),
                     y: "p"
+                }, {
+                    loading: true
                 });
             } else {
                 this.response = await api.get(`/api/test/tab/${this.activeItem}?fish=cakes`, {
@@ -211,7 +201,6 @@ export default {
                     loading: true
                 });
             }
-
 
             // this.response = await FetchApi(`/api/test/tab/${this.activeItem}`,{}, "test");
             // this.response = await FetchApi(`/api/test/tab/${this.activeItem}`,{});

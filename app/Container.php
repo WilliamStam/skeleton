@@ -35,6 +35,7 @@ use System\Model\ModelInterface;
 
 use App\Responders\Responder;
 
+use System\Utilities\Arrays;
 use System\Utilities\Strings;
 
 use System\DB\Mysql;
@@ -134,9 +135,10 @@ return [
                         PDO::ATTR_STRINGIFY_FETCHES => true,
                     ],
                 ),
-
+                // session options
                 'session' => array(
-                    'name' => 'app',
+                    // session cookie name
+                    'name'=>'sid',
                     // Lax will sent the cookie for cross-domain GET requests
                     'cookie_samesite' => 'Lax',
                     // Optional: Sent cookie only over https
@@ -144,8 +146,8 @@ return [
                     // Optional: Additional XSS protection
                     // Note: The cookie is not accessible for JavaScript!
                     'cookie_httponly' => false,
-                    'csrf' => 'csrf_token_settings'
-                )
+                ),
+                'csrf'=>"csrf_test_name"
             ]
         ))->fromFile("../config.php");
     },
@@ -178,11 +180,12 @@ return [
     Replace::class => function (ContainerInterface $container) {
         $settings = $container->get(Settings::class);
         $system = $container->get(System::class);
+        $session = $container->get(Session::class);
         $replace = new Replace();
         $replace->set("@@PACKAGE@@", $container->get("PACKAGE")->description);
         $replace->set("@@VERSION@@", $container->get("PACKAGE")->version);
-        $replace->set("@@CSRF_NAME@@", $settings->get("session.csrf"));
-        $replace->set("@@ASSETS@@", $system->get("ASSETS.static_base"));
+        $replace->set("@@CSRF_NAME@@", $settings->get("csrf"));
+        $replace->set("@@CSRF@@", $session->get("CSRF"));
 
         return $replace;
     },
@@ -193,6 +196,27 @@ return [
         );
 
         $session->setName(Strings::toAscii($container->get("PACKAGE")->description));
+
+        $session_options = Arrays::merge(array(
+            "name"=>"SID",
+            "gc_maxlifetime"=>"3600",
+            "cookie_lifetime"=>"3600",
+            "cookie_path"=>"/",
+            "cookie_domain"=>"",
+            "cookie_secure"=>"",
+            "cookie_httponly"=>"",
+            "cookie_samesite"=>"",
+            "use_strict_mode"=>"0",
+            "use_cookies"=>"1",
+            "use_only_cookies"=>"1",
+        ),$container->get(Settings::class)->get("session"));
+
+        $session_options['cookie_secure'] = true;
+        $session_options['cookie_samesite'] = 'None';
+        $session_options['cookie_httponly'] = true;
+        $session_options['cookie_domain'] = '';
+
+        $session->setOptions($session_options);
 
 
         $session->set("CSRF", md5(uniqid(mt_rand(), true)));

@@ -172,7 +172,7 @@ export default {
     },
     computed: {
         profiler_list() {
-            return this.$store.state.profiler.list;
+            return this.$store.state.api.profiler;
         },
     },
     methods: {

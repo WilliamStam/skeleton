@@ -12,6 +12,7 @@
     </div>
 
     <PageProfiler></PageProfiler>
+    <LoadingMask></LoadingMask>
 
 </template>
 
@@ -35,9 +36,12 @@
 /* eslint-disable */
 import PageProfiler from "@/components/PageProfiler.vue"; // @ is an alias to /src
 import { useStore } from '@/store';
+import LoadingMask from "@/components/LoadingMask";
 
 export default {
-    components: {PageProfiler},
+    components: {
+        LoadingMask,
+        PageProfiler},
     setup() {
 
 
@@ -48,7 +52,7 @@ export default {
 
         let profiler_item = JSON.parse(window.profiler)
         if (profiler_item.url){
-            store.dispatch("profiler/add",profiler_item);
+            store.dispatch("api/addProfiler",profiler_item);
         }
 
     }

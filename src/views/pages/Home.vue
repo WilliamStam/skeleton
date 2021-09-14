@@ -2,8 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <img alt="test image" :src="media('/media/wallhaven-207882.jpg?h=200')"/>
-                <div>logo hello? [{{ media("/media/wallhaven-207882.jpg?h=200") }}]</div>
+                <img alt="test image" src="/media/wallhaven-207882.jpg?h=200"/>
                 <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
             </div>
         </div>

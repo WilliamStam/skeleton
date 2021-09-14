@@ -8,14 +8,19 @@ use System\Utilities\Arrays;
 class Session {
     private $data = array();
     private SessionHandlerInterface $handler;
+    private $options = array();
 
     function __construct(SessionHandlerInterface $handler, Profiler $profiler) {
         $this->handler = $handler;
         $this->profiler = $profiler;
     }
 
-    public function start(): Session {
 
+    public function start($options=null): Session {
+
+        if (is_array($options)){
+            $this->options = $options;
+        }
 
         if ($this->isStarted()) {
             throw new SessionException('Failed to start the session: Already started.');
@@ -32,7 +37,7 @@ class Session {
         }
 
         // Try and start the session
-        if (!session_start()) {
+        if (!session_start($this->options)) {
             throw new SessionException('Failed to start the session.');
         }
 
@@ -50,34 +55,13 @@ class Session {
     }
 
     public function isStarted(): bool {
-        return session_status() === PHP_SESSION_ACTIVE;
+       return session_status() === PHP_SESSION_ACTIVE;
     }
 
-    public function regenerateId(): void {
+
+    public function destroy(): void {
         if (!$this->isStarted()) {
-            throw new SessionException('Cannot regenerate the session ID for non-active sessions.');
-        }
-
-        if (headers_sent()) {
-            throw new SessionException('Headers have already been sent.');
-        }
-
-        if (!session_regenerate_id(true)) {
-            throw new SessionException('The session ID could not be regenerated.');
-        }
-        $this->clear();
-
-        if (ini_get('session.use_cookies')) {
-            $params = session_get_cookie_params();
-            setcookie(
-                $this->getName(),
-                '',
-                time() - 42000,
-                $params['path'],
-                $params['domain'],
-                $params['secure'],
-                $params['httponly']
-            );
+            return;
         }
 
         if (session_unset() === false) {
@@ -88,15 +72,9 @@ class Session {
             throw new SessionException('The session could not be destroyed.');
         }
 
-    }
 
-    public function destroy(): void {
-        if (!$this->isStarted()) {
-            return;
-        }
 
-        $this->data = array();
-        $this->regenerateId();
+        $this->start();
     }
 
     public function clear(): void {
@@ -120,14 +98,16 @@ class Session {
         return (string)session_name();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     public function setName(string $name): void {
         if ($this->isStarted()) {
             throw new SessionException('Cannot change session name when session is active');
         }
         session_name($name);
+    }
+    public function setOptions(array $options) : Session {
+        $this->options = $options;
+        return $this;
     }
 
     public function has(string $key): bool {
@@ -159,5 +139,4 @@ class Session {
 
 }
 
-final class SessionException extends \RuntimeException {
-}
+class SessionException extends \RuntimeException {}

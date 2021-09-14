@@ -6,7 +6,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import '@/assets/css/styles.scss'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import {ProfilerItem} from '@/store/api/profiler'
+import {ProfilerRecord} from '@/store/api'
 
 import library from "./icons";
 library.add()
@@ -24,9 +24,6 @@ const app = createApp(App)
 ;
 
 
-app.config.globalProperties.media = (path:string) => {
-    return `${process.env.VUE_APP_MEDIA}${path}`;
-};
 
 app.component("fa",FontAwesomeIcon);
 app.provide('axios', app.config.globalProperties.axios);
@@ -34,6 +31,6 @@ app.mount("#app");
 
 declare global {
   interface Window {
-    profiler?: ProfilerItem;
+    profiler?: ProfilerRecord;
   }
 }

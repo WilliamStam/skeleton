@@ -1,12 +1,10 @@
 import { createStore, Store } from 'vuex';
-import profiler from './api/profiler';
-import api from './api/api';
+import api from './api';
 import {State} from "@vue/runtime-core";
 
 export const store = createStore({
   // adding modules in
   modules: {
-    profiler,
     api
   },
 });
