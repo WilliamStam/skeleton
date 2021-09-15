@@ -6,13 +6,16 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-9 border shadow-lg" style="position:relative; height: 600px; padding:0;">
+            <div class="col-9 " >
+                <div class="border shadow-lg" style="position:relative; height: 600px; padding:0;" >
+
+
 
 
                 <template v-for="item in list" :key="item.id">
                     <div :style="{width:item.width+'px',height:item.height+'px',left:item.x+'px',top:item.y+'px'}" class="canvas-item" @click="select(item)" role="button">{{ item.label }}</div>
                 </template>
-
+ </div>
 
             </div>
 
