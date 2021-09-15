@@ -62,6 +62,9 @@ return function (App $app) {
         }
     });
 
+    $app->options('/api', function ($request, $response) {
+        return $response;
+    });
     $app->options('/api/{path:.*}', function ($request, $response) {
         return $response;
     });

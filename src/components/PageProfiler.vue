@@ -1,5 +1,6 @@
 <template v-if="profiler_list">
     <div class="layout-profiler">
+        <div>{{ show_profiler_button }}</div>
         <div>profiler: {{ profiler }}</div>
         <button type="button" class="btn btn-primary" @click="modal.show()">
             profiler
@@ -166,11 +167,15 @@ export default {
         modal: null,
         selectedRecord: undefined
     }),
+
     mounted() {
         this.modal = new Modal(this.$refs.systemProfilerModal);
         // console.log("profiler mounted");
     },
     computed: {
+        show_profiler_button() {
+          console.log(this.$store.state.api.profiler)
+        },
         profiler_list() {
             return this.$store.state.api.profiler;
         },

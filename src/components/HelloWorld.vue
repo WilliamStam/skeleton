@@ -1,5 +1,6 @@
 <template>
 
+    <ComponentName></ComponentName>
 
     <div>
         <h1>
@@ -139,11 +140,15 @@ import {
 import api from "@/composables/api";
 import {watch} from "vue";
 import {mapGetters} from "vuex";
+import ComponentName from "./demo.vue"
 
 // import ApiCallModel from "@/models/system/api";
 
 export default {
     name: "App",
+    components: {
+        ComponentName
+    },
     data: () => ({
         modal: null,
         tabs: null,

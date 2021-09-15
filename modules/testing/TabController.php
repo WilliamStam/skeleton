@@ -40,7 +40,7 @@ class TabController {
 
 
 
-        $data['logs'] = $this->testmodel->getAll()->withFilter(function($item){
+        $data['logs'] = $this->testmodel->getAll(["order"=>"id DESC"])->withFilter(function($item){
             return $item->level == "error"; // this filters after you already have a collection. this isnt filtering on the db side
         })->toSchema($this->testschema,"2");
 

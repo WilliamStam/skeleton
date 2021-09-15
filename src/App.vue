@@ -1,15 +1,10 @@
 <template>
-    <div id="nav">
-        <router-link to="/">Home</router-link>
-        |
-        <router-link :to="{path:`/about/hhh`}">About</router-link>
-        |
-        <router-link :to="{path: '/contact'}">Contact</router-link>
-    </div>
-    <div id="page">
 
-        <router-view/>
-    </div>
+    <PageMenu></PageMenu>
+
+
+    <router-view id="page-content"></router-view>
+    <PageFooter></PageFooter>
 
     <PageProfiler></PageProfiler>
     <LoadingMask></LoadingMask>
@@ -17,18 +12,8 @@
 </template>
 
 <style lang="scss">
-
-#nav {
-    padding: 30px;
-
-    a {
-        font-weight: bold;
-        color: #2c3e50;
-
-        &.router-link-exact-active {
-            color: #42b983;
-        }
-    }
+#page-content {
+    padding-top:3rem;
 }
 </style>
 
@@ -37,12 +22,18 @@
 import PageProfiler from "@/components/PageProfiler.vue"; // @ is an alias to /src
 import { useStore } from '@/store';
 import LoadingMask from "@/components/LoadingMask";
+import PageMenu from "@/views/components/PageMenu.vue";
+import PageFooter from "@/views/components/PageFooter.vue";
 
 export default {
     components: {
         LoadingMask,
-        PageProfiler},
+        PageProfiler,
+        PageMenu,
+        PageFooter,
+    },
     setup() {
+
 
 
     },
@@ -54,6 +45,8 @@ export default {
         if (profiler_item.url){
             store.dispatch("api/addProfiler",profiler_item);
         }
+
+        store.dispatch("system/getSystemInfo");
 
     }
 
