@@ -24,19 +24,19 @@ export default {
             state.list.push(item);
         },
         removeItem(state: TestingState, item: CanvasItem): void {
-            const index = state.list.findIndex(c => c.id == item.id);
+            const index = state.list.findIndex(i => i.id == item.id);
             state.list.splice(index, 1);
         },
 
     },
     actions: {
 
-        addItem({commit, state}: { commit: Commit, state: TestingState }, item:CanvasItem):void {
+        addItem({commit}: { commit: Commit }, item:CanvasItem):void {
 
             console.log(item)
             commit("addItem", item);
         },
-        removeItem({commit, state}: { commit: Commit, state: TestingState }, item:CanvasItem):void {
+        removeItem({commit}: { commit: Commit }, item:CanvasItem):void {
 
             console.log(item)
             commit("removeItem", item);

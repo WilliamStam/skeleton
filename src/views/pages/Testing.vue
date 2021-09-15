@@ -6,16 +6,22 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-9 " >
-                <div class="border shadow-lg" style="position:relative; height: 600px; padding:0;" >
+            <div class="col-9 ">
+                <div class="border shadow-lg" style="position:relative; height: 600px; padding:0;">
 
 
-
-
-                <template v-for="item in list" :key="item.id">
-                    <div :style="{width:item.width+'px',height:item.height+'px',left:item.x+'px',top:item.y+'px'}" class="canvas-item" @click="select(item)" role="button">{{ item.label }}</div>
-                </template>
- </div>
+                    <template v-for="item in list" :key="item.id">
+                        <div
+                            :style="{width:item.width+'px',height:item.height+'px',left:item.x+'px',top:item.y+'px'}"
+                            class="canvas-item"
+                            @click="select(item)"
+                            role="button"
+                             :class="{'active': item == selected}"
+                        >
+                            {{ item.label }}
+                        </div>
+                    </template>
+                </div>
 
             </div>
 
@@ -31,50 +37,50 @@
                     </div>
                     <div class="col-6">
                         <label for="height" class="form-label">Height</label>
-                        <input type="number" class="form-control" id="height" placeholder="height"  v-model="selected.height">
+                        <input type="number" class="form-control" id="height" placeholder="height" v-model="selected.height">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-6">
                         <label for="x" class="form-label">X</label>
-                        <input type="number" class="form-control" id="x" placeholder="x"  v-model="selected.x">
+                        <input type="number" class="form-control" id="x" placeholder="x" v-model="selected.x">
                     </div>
                     <div class="col-6">
                         <label for="y" class="form-label">Y</label>
-                        <input type="number" class="form-control" id="y" placeholder="y"  v-model="selected.y">
+                        <input type="number" class="form-control" id="y" placeholder="y" v-model="selected.y">
                     </div>
                 </div>
 
                 <div class="mt-4">
-                     <div v-if="selected.id">
-                         <div class="d-flex">
-                              <button class="btn btn-info flex-grow-1" @click="reset()">Cancel</button>
+                    <div v-if="selected.id">
+                        <div class="d-flex">
+                            <button class="btn btn-info flex-grow-1" @click="reset()">Cancel</button>
 
-                         <button class="btn btn-danger ms-4" @click="remove(selected)">
+                            <button class="btn btn-danger ms-4" @click="remove(selected)">
 
-                             <fa icon="trash-alt" ></fa>
+                                <fa icon="trash-alt"></fa>
 
-                         </button>
-                         </div>
+                            </button>
+                        </div>
 
                     </div>
                     <div v-else>
-                         <button class="btn btn-primary w-100" @click="addItem()">Add New</button>
+                        <button class="btn btn-primary w-100" @click="add()">Add New</button>
                     </div>
                 </div>
 
                 <table class="table table-bordered mt-4 table-hover">
-                <thead>
-                <tr class="table-dark">
-                    <th>Label</th>
-                    <th>w</th>
-                    <th>h</th>
-                    <th>x</th>
-                    <th>y</th>
-                </tr>
-                </thead>
+                    <thead>
+                    <tr class="table-dark">
+                        <th>Label</th>
+                        <th>w</th>
+                        <th>h</th>
+                        <th>x</th>
+                        <th>y</th>
+                    </tr>
+                    </thead>
                     <tbody>
-                    <tr v-for="item in list" :key="item.id" class="bg-white" role="button" @click="select(item)">
+                    <tr v-for="item in list" :key="item.id" class="bg-white" role="button" @click="select(item)" :class="{'table-light': item == selected}">
                         <td>{{ item.label }}</td>
                         <td>{{ item.width }}</td>
                         <td>{{ item.height }}</td>
@@ -82,61 +88,66 @@
                         <td>{{ item.y }}</td>
                     </tr>
                     </tbody>
-            </table>
+                </table>
 
             </div>
         </div>
     </div>
 </template>
 <script>
-import {CanvasItem as CanvasItemInterface} from "@/store/testing";
 export default {
     name: "testing",
     mounted() {
         console.log("mounted");
 
-        this.$store.dispatch("testing/addItem",{
-            id:"1",
-            label:"Testing 1",
-            width: 300,
-            height:100,
-            x: 400,
-            y: 200
-        });
+        // just adding an item to test
+        // this.$store.dispatch("testing/addItem",{
+        //     id:"1",
+        //     label:"Testing 1",
+        //     width: 300,
+        //     height:100,
+        //     x: 400,
+        //     y: 200
+        // });
 
+        // we reset the form. just in case.
         this.reset();
     },
     data: () => ({
+        // hold the current selected values
         selected: {}
     }),
 
     computed: {
+        // get the list from the global store. this means every component has access to this list
         list() {
             const state_list = this.$store.state.testing.list;
-            console.log("state list",state_list)
+            console.log("state list", state_list);
             return state_list;
         },
 
     },
     methods: {
-        addItem(){
-            if (this.selected.id==""){
+        // add the forms selected stuff to the global store
+        add() {
+            // if no "id" on it we give it an id
+            if (this.selected.id == "") {
                 this.selected.id = new Date();
             }
-            this.$store.dispatch("testing/addItem",this.selected)
-        },
-        select(item){
-            console.log("selected",item)
+            this.$store.dispatch("testing/addItem", this.selected);
+        }, // on selecting an item set the selected data item to the item from the store
+        select(item) {
+            console.log("selected", item);
             this.selected = item;
 
-        },
-        remove(item){
-            console.log("removing",item)
-            this.$store.dispatch("testing/removeItem",item);
+        }, // remove the item from the store
+        remove(item) {
+            console.log("removing", item);
+            this.$store.dispatch("testing/removeItem", item);
             this.reset();
-        },
+        }, // reset the form again.
         reset() {
-            console.log("resetting the form")
+            console.log("resetting the form");
             this.selected = {
                 id: "",
                 label: "new item",
@@ -154,11 +165,20 @@ export default {
 <style lang="scss">
 .canvas-item {
     border: 1px solid #000000;
-    background: rgba(0,0,250,0.2);
-    position:absolute;
+    background: rgba(0, 0, 250, 0.2);
+    position: absolute;
     z-index: 999;
+
     &:hover {
-        background: rgba(0,0,250,0.4);
+        background: rgba(0, 0, 250, 0.4);
     }
+    &.active {
+        background: $primary;
+        color: $white;
+    }
+}
+tr.active {
+    background:$primary;
+    color: $white;
 }
 </style>
