@@ -1,5 +1,4 @@
 import {Commit, Dispatch} from 'vuex';
-import {ActiveRequestRecord, ProfilerRecord, ProfilerRecordItems} from "@/store/api";
 
 export interface CanvasItem {
     "label": string,
@@ -24,6 +23,10 @@ export default {
         addItem(state: TestingState, item: CanvasItem): void {
             state.list.push(item);
         },
+        removeItem(state: TestingState, item: CanvasItem): void {
+            const index = state.list.findIndex(c => c.id == item.id);
+            state.list.splice(index, 1);
+        },
 
     },
     actions: {
@@ -32,6 +35,11 @@ export default {
 
             console.log(item)
             commit("addItem", item);
+        },
+        removeItem({commit, state}: { commit: Commit, state: TestingState }, item:CanvasItem):void {
+
+            console.log(item)
+            commit("removeItem", item);
         },
 
     },

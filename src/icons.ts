@@ -3,7 +3,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 
 import {
     faPlusSquare,
-    faMinusSquare
+    faMinusSquare,
+    faTrashAlt
 
 
 } from '@fortawesome/free-solid-svg-icons'
@@ -11,7 +12,8 @@ import {
 
 library.add(
     faPlusSquare,
-    faMinusSquare
+    faMinusSquare,
+    faTrashAlt
 )
 
 export default library;

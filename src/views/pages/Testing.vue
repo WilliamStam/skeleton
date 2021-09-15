@@ -44,8 +44,16 @@
 
                 <div class="mt-4">
                      <div v-if="selected.id">
-                       <button class="btn btn-info w-100">Save</button>
-                         <button class="btn btn-link w-100" @click="reset()">Cancel</button>
+                         <div class="d-flex">
+                              <button class="btn btn-info flex-grow-1" @click="reset()">Cancel</button>
+
+                         <button class="btn btn-danger ms-4" @click="remove(selected)">
+
+                             <fa icon="trash-alt" ></fa>
+
+                         </button>
+                         </div>
+
                     </div>
                     <div v-else>
                          <button class="btn btn-primary w-100" @click="addItem()">Add New</button>
@@ -74,15 +82,8 @@
             </table>
 
             </div>
-
-
-
-
         </div>
-
-
     </div>
-
 </template>
 <script>
 import {CanvasItem as CanvasItemInterface} from "@/store/testing";
@@ -127,8 +128,9 @@ export default {
 
         },
         remove(item){
-            console.log(item)
-
+            console.log("removing",item)
+            this.$store.dispatch("testing/removeItem",item);
+            this.reset();
         },
         reset() {
             console.log("resetting the form")
