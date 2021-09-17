@@ -147,7 +147,13 @@ return [
                     // Note: The cookie is not accessible for JavaScript!
                     'cookie_httponly' => false,
                 ),
-                'csrf'=>"csrf_test_name"
+                'csrf'=>"csrf_test_name",
+                'auth'=>array(
+                    // can fail 5 logins per 5 minutes
+                    'attempts'=>5,
+                    'minutes'=>5,
+                ),
+
             ]
         ))->fromFile("../config.php");
     },
@@ -268,10 +274,17 @@ return [
         ), 404);
 
         $errors->addHandler(new Error(
+            $loggers->getByLevel(\Psr\Log\LogLevel::NOTICE)->toArray(),
+            429,
+            "Slow down mac!"
+        ), 429);
+
+        $errors->addHandler(new Error(
             $loggers->getByLevel(\Psr\Log\LogLevel::ERROR)->toArray(),
             500,
             "dafuk, YOU BROKE IT"
         ), [500, 0]);
+
 
 
         $errors->setDefault(new Error(
@@ -281,26 +294,6 @@ return [
         ));
 
 
-//        $errors->addHandler(new Error(
-//            $loggers->getByLevel(\Psr\Log\LogLevel::ERROR,
-//            500,
-//            "dafuk, YOU BROKE IT"
-//        ),array(500,0)));
-//
-
-
-//        $errors->addHandler(
-//            (new Error($loggers))->load(404,"Page not Found", \Psr\Log\LogLevel::DEBUG)
-//        );
-//        $errors->addHandler(
-//            (new Error($loggers))->load(500,"System Error", \Psr\Log\LogLevel::ERROR),
-//            array(0,500) // for code 0 or 500 it will load this handler
-//        );
-//        // if we dont find a handler by code then use this
-//        $errors->setDefault(
-//            (new Error($loggers))->load(501,"Generic Error",  \Psr\Log\LogLevel::ALERT)
-//        );
-
 
         return $errors;
     },
@@ -309,8 +302,6 @@ return [
         $logger = new Loggers($container->get(System::class));
         $DBLogger = $container->get("DBLogger");
         $system = $container->get(System::class);
-
-
 
         $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::EMERGENCY, array(
             \Psr\Log\LogLevel::EMERGENCY
@@ -324,10 +315,10 @@ return [
         $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::ERROR, array(
            \Psr\Log\LogLevel::ERROR
         ));
+        $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::WARNING, array(
+           \Psr\Log\LogLevel::WARNING
+        ));
         if ($system->get("DEBUG")){
-            $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::WARNING, array(
-               \Psr\Log\LogLevel::WARNING
-            ));
             $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::NOTICE, array(
                \Psr\Log\LogLevel::NOTICE
             ));
@@ -338,6 +329,9 @@ return [
                \Psr\Log\LogLevel::DEBUG
             ));
         }
+
+
+            $logger->addHandler(new FunctionLogger($DBLogger), "auth", array());
 
 
         return $logger;

@@ -23,6 +23,7 @@ use App\Middleware\CacheControlMiddleware;
 use App\Middleware\ErrorMiddleware;
 use App\Middleware\SessionMiddleware;
 use App\Middleware\CorsMiddleware;
+use App\Middleware\UserMiddleware;
 
 
 use System\Core\System;
@@ -54,6 +55,8 @@ return function (App $app) {
 
 //    $app->add(ReplaceMiddleware::class);
     $app->add(CorsMiddleware::class);
+
+    $app->add(UserMiddleware::class);
 
 
     $app->addBodyParsingMiddleware();

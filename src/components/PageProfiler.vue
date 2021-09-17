@@ -1,9 +1,7 @@
 <template v-if="profiler_list">
     <div class="layout-profiler">
-        <div>{{ show_profiler_button }}</div>
-        <div>profiler: {{ profiler }}</div>
-        <button type="button" class="btn btn-primary" @click="modal.show()">
-            profiler
+        <button type="button" class="btn btn-dark position-fixed" style="left:0; bottom:0;" @click="modal.show()">
+            <fa icon="stopwatch"></fa>
         </button>
         <div class="modal fade" ref="systemProfilerModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg ">

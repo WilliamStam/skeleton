@@ -82,6 +82,9 @@ class Session {
 
     }
 
+    public function id(): string {
+        return $this->getId();
+    }
     public function getId(): string {
         return (string)session_id();
     }

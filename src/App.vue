@@ -2,17 +2,17 @@
 
     <PageMenu></PageMenu>
 
-
     <router-view id="page-content"></router-view>
+
     <PageFooter></PageFooter>
 
-    <PageProfiler></PageProfiler>
+    <PageProfiler v-if="show_profiler"></PageProfiler>
     <LoadingMask></LoadingMask>
 
 </template>
 
 <style lang="scss">
-#page-content {
+#app {
     padding-top:3rem;
 }
 </style>
@@ -48,6 +48,11 @@ export default {
 
         store.dispatch("system/getSystemInfo");
 
+    },
+    computed: {
+        show_profiler(){
+            return this.$store.state.api.profiler.length
+        }
     }
 
 

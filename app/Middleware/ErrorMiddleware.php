@@ -42,12 +42,26 @@ class ErrorMiddleware {
         } catch (\Throwable $e) {
             $profiler = $this->profiler->start(__CLASS__ . "::" . __FUNCTION__, __NAMESPACE__);
 
-            $error = $this->errors->getHandler($e)->handle($request,$e,LogLevel::ERROR);
+            $level = LogLevel::ERROR;
+            if (property_exists($e,"logLevel")){
+               $level = $e->logLevel;
+            }
+
+
+            $error = $this->errors->getHandler($e)->handle($request,$e,$level);
+
+
 
             $response = $this->responder->withJson($this->responseFactory->createResponse($error->getCode(),$error->getMessage()),array(
                 "code"=>$error->getCode(),
                 "message"=>$error->getMessage(),
             ));
+
+            if (property_exists($e,"headers")){
+                foreach ($e->headers as $header=>$value){
+                    $response = $response->withHeader($header,$value);
+                }
+            }
 
             $profiler->stop();
         }

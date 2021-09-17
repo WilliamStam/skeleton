@@ -48,7 +48,7 @@ class Error implements ErrorInterface {
         }
 
 
-//        var_dump($log_level);
+
         foreach ($this->loggers as $logger){
             $logger->log($log_level,$exception->getMessage(),$payload);
         }

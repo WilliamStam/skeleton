@@ -7,6 +7,12 @@ const Auth: Array<RouteRecordRaw> = [
         component: () =>
             import('../views/pages/auth/Login.vue'),
     },
+    {
+        path: '/auth/logout',
+        name: 'auth-logout',
+        component: () =>
+            import('../views/pages/auth/Login.vue'),
+    },
 
 
 ];

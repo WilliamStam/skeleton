@@ -90,33 +90,68 @@ the /* routes point to the /web/index.html file as a "template". which in turn l
 # Database (wip)
 
 ```
-CREATE TABLE `system_logs` (
-  `id` int(11) NOT NULL,
+
+CREATE TABLE IF NOT EXISTS `system_attempts` (
+  `identifier` varchar(255) DEFAULT NULL,
+  `type` varchar(250) DEFAULT NULL,
+  `ip` varchar(45) DEFAULT NULL,
+  `agent` varchar(300) DEFAULT NULL,
+  `payload` text DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  KEY `session_id` (`identifier`),
+  KEY `ip` (`ip`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE IF NOT EXISTS `system_authentication` (
+  `token` varchar(50) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `changed` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`token`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE IF NOT EXISTS `system_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `version` varchar(100) DEFAULT NULL,
   `datetime` datetime DEFAULT current_timestamp(),
   `level` varchar(50) DEFAULT NULL,
   `log` text DEFAULT NULL,
-  `context` text DEFAULT NULL
-);
+  `context` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `system_sessions` (
+
+CREATE TABLE IF NOT EXISTS `system_sessions` (
   `session_id` varchar(255) NOT NULL,
   `user_key` varchar(250) DEFAULT NULL,
   `data` text DEFAULT NULL,
   `ip` varchar(50) DEFAULT NULL,
   `proxy_ip` varchar(50) DEFAULT NULL,
   `agent` varchar(300) DEFAULT NULL,
-  `timestamp` int(11) DEFAULT NULL
-);
+  `timestamp` int(11) DEFAULT NULL,
+  PRIMARY KEY (`session_id`),
+  KEY `user_key` (`user_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-ALTER TABLE `system_logs`
-  ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `system_sessions`
-  ADD PRIMARY KEY (`session_id`),
-  ADD KEY `user_key` (`user_key`);
 
-ALTER TABLE `system_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+CREATE TABLE IF NOT EXISTS `system_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `salt` varchar(50) DEFAULT NULL,
+  `settings` text DEFAULT NULL,
+  `last_active` datetime DEFAULT NULL,
+  `last_page` varchar(250) DEFAULT NULL,
+  `active` tinyint(1) DEFAULT 1,
+  PRIMARY KEY (`id`),
+  KEY `active` (`active`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
