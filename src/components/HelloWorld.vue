@@ -32,6 +32,7 @@
             </li>
         </ul>
         <div v-if="response">
+            <div v-if="response.name">user: {{ response.name }}</div>
             <div>tab: {{ response.tab }}</div>
             <div>date: {{ response.date }}</div>
             <!--            only response.version shows in the test.json. the api has other options but for packaging purposes...-->

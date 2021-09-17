@@ -38,6 +38,11 @@ class TabController {
         $data['csrf'] = $request->getAttribute("SESSION")->get("CSRF");
         $data['csrfs'] = array("@@CSRF_NAME@@"=>"@@CSRF@@");
 
+        if ($request->getAttribute("USER")){
+            $data['name'] = $request->getAttribute("USER")->name;
+        }
+
+
 
 
         $data['logs'] = $this->testmodel->getAll(["order"=>"id DESC"])->withFilter(function($item){
