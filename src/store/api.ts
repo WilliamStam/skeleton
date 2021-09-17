@@ -44,6 +44,7 @@ export default {
         profiler: []
     }),
     mutations: {
+
         addProfiler(state: ApiState, item: ProfilerRecord): void {
             state.profiler.splice(0, 0, item);
         },
@@ -57,6 +58,7 @@ export default {
         }
     },
     actions: {
+
 
         addActive({commit, state}: { commit: Commit, state: ApiState }, item: ActiveRequestRecord): void {
             commit("addActive", item);
@@ -72,7 +74,8 @@ export default {
     getters: {
         showLoading: (state:ApiState) => {
             return state.active.filter(item => item?.config?.loading).length
-        }
+        },
+
     }
 
 }

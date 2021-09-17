@@ -9,7 +9,7 @@ import axios, {
 import {useStore} from "@/store";
 import {objectToQueryString} from "@/utilities/serialize";
 import md5 from "@/utilities/md5";
-
+import {ApiState} from "@/store/api";
 
 
 export interface AxiosRequestAPIConfig extends AxiosRequestConfig {
@@ -30,8 +30,12 @@ const requestInterceptor = (req: AxiosRequestAPIConfig): AxiosRequestAPIConfig =
     if (!req.key) {
         req.key = md5(req.url + "|" + req.method + "|" + req.data);
     }
-    console.log("adding request")
-    console.log(store)
+    const token = store.getters["auth/token"]
+
+    if (token) {
+        req.headers['Authorization'] = 'Bearer ' + token;
+    }
+
     store.dispatch("api/addActive", {
         key: req.key,
         instance: this,
@@ -81,7 +85,7 @@ const api = {
     get(url: string, params: EmptyKeyValueObject = {}, options: AxiosRequestAPIConfig = {}): Promise<unknown> {
 
         url += url.includes("?") ? "&" : "?";
-        url +=  objectToQueryString(params)
+        url += objectToQueryString(params)
 
         // axios_config.options = options;
 

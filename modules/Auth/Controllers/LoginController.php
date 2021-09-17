@@ -26,13 +26,47 @@ class LoginController {
         $this->responder = $responder;
         $this->LoginRepository = $LoginRepository;
         $this->userSchema = $userSchema;
+
     }
 
-    public function __invoke(Request $request, Response $response): Response {
+
+    public function get(Request $request, Response $response): Response {
+        $this->LoginRepository->setSession($request->getAttribute("SESSION")->id());
+        $data = array();
+        $data['active'] = false;
+        $data['messages'] = array();
+
+        if ($request->getAttribute("USER") && $request->getAttribute("USER")->id()) {
+            $data['messages'][] = array(
+                "type" => "success",
+                "message" => "You are already logged in."
+            );
+        } else {
+            if ($this->LoginRepository->attempts($this->system->get("SETTINGS.auth.minutes")) < $this->system->get("SETTINGS.auth.attempts")) {
+                $data['messages'][] = array(
+                    "type" => "warning",
+                    "message" => "Use your full email address and network password (same as you use to log into windows)."
+                );
+                $data['active'] = true;
+            } else {
+                $data['messages'][] = array(
+                    "type" => "error",
+                    "message" => "Too many attempts. Try again later."
+                );
+            }
+        }
+
+
+        return $this->responder->withJson($response, $data);
+    }
+
+    public function post(Request $request, Response $response): Response {
 
         $this->LoginRepository->setSession($request->getAttribute("SESSION")->id());
 
         $data = array();
+        $data['active'] = false;
+        $data['username'] = $this->system->get("POST.username");
         $data['messages'] = array();
 
         $user = null;
@@ -42,37 +76,43 @@ class LoginController {
         if ($this->LoginRepository->attempts($this->system->get("SETTINGS.auth.minutes")) < $this->system->get("SETTINGS.auth.attempts")) {
             $user = $this->LoginRepository->login($this->system->get("POST.username"), $this->system->get("POST.password"));
 
-        } else {
-            $data['messages'][] = array(
-                "error",
-                "Too Many attempts"
-            );
-            $data['attempts'] = $this->LoginRepository->attempts($this->system->get("SETTINGS.auth.minutes"));
-            return $this->responder->withJson($response, $data)->withStatus(429, "Too many attempts");
+            if ($user && $user->id()) {
+                $data['messages'][] = array(
+                    "type" => "success",
+                    "message" => "Login successful"
+                );
+
+
+                $data['token'] = $this->LoginRepository->generateAndSaveToken($user);
+                $data['user'] = $user->toSchema($this->userSchema);
+                //            $data['user'] = $user->toSchema()
+
+                return $this->responder->withJson($response, $data);
+            }
         }
 
 
         // user logged in
-        if ($user && $user->id()) {
+
+
+        $attempts = $this->LoginRepository->attempts($this->system->get("SETTINGS.auth.minutes")) * 1;
+        $remaining = ($this->system->get("SETTINGS.auth.attempts") * 1) - $attempts;
+
+        if ($remaining == 0) {
             $data['messages'][] = array(
-                "success",
-                "Login successful"
+                "type" => "error",
+                "message" => "Too many attempts. Try again later."
             );
-
-            $data['token'] = $this->LoginRepository->generateAndSaveToken($user);
-            $data['user'] = $user->toSchema($this->userSchema);
-//            $data['user'] = $user->toSchema()
-
-            return $this->responder->withJson($response, $data);
+        } else {
+            $data['messages'][] = array(
+                "type" => "error",
+                "message" => "Login unsuccessful. {$remaining} Attempts remaining"
+            );
+            $data['active'] = true;
         }
-
         // login failed
-        $data['messages'][] = array(
-            "error",
-            "Login unsuccessful"
-        );
-        $data['attempts'] = $this->LoginRepository->attempts($this->system->get("SETTINGS.auth.minutes"));
-        return $this->responder->withJson($response, $data)->withStatus(401, "Incorrect credentials");
+
+        return $this->responder->withJson($response, $data);
 
 
     }
@@ -80,9 +120,3 @@ class LoginController {
 
 }
 
-class TooManyLoginAttemptsException extends \Exception {
-    protected $code = 500;
-    protected $message = 'Error handler not found';
-    public $headers = array();
-    public $logLevel = LogLevel::EMERGENCY;
-}

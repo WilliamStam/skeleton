@@ -19,7 +19,8 @@ class Module extends AbstractModule {
     function moduleRoutes(RouteCollectorProxy $routes): void {
         $routes->group("/auth", function (RouteCollectorProxy $group) {
            $group->get("",Controllers\AuthController::class)->setName("auth_details");
-           $group->post("/login",Controllers\LoginController::class)->setName("auth_login");
+           $group->get("/login",Controllers\LoginController::class.":get")->setName("auth_login_get");
+           $group->post("/login",Controllers\LoginController::class.":post")->setName("auth_login_post");
            $group->get("/logout",Controllers\LogoutController::class)->setName("auth_logout");
 
         });
