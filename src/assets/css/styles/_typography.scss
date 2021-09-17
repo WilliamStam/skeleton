@@ -1,3 +1,22 @@
 .text-bold {
     font-weight: bold;
 }
+.text-normal {
+    font-size:$font-size-base!important;
+}
+.text-x-small {
+    font-size:x-small!important;
+}
+.text-xx-small {
+    font-size:xx-small!important;
+}
+
+.text-large {
+    font-size: 1.2rem!important;
+}
+.text-x-large {
+    font-size: 1.5rem!important;
+}
+.text-xx-large {
+    font-size: 2rem!important;
+}

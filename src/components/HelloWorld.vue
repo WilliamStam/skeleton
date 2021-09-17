@@ -79,9 +79,10 @@
             <div class="tab-pane fade" :class="{ 'active show': isActive('logs') }" id="logs" role="tabpanel" aria-labelledby="home-logs">
                 logs
 
-                <div v-if="response">
-                    <template v-for="log in response.logs" :key="log.id">
-                        <div class="row border-bottom">
+                <div v-if="response" >
+                    <div class="border bg-white p-2">
+                         <template v-for="log in response.logs" :key="log.id">
+                        <div class="row border-bottom ">
                             <div class="col-1">{{ log.id }}</div>
                             <div class="col-2">{{ log.datetime }}</div>
                             <div class="col-4">{{ log.log }}</div>
@@ -89,6 +90,8 @@
 
                         </div>
                     </template>
+                    </div>
+
 
                 </div>
                 <div v-else>

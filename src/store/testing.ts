@@ -27,10 +27,8 @@ export default {
             const index = state.list.findIndex(i => i.id == item.id);
             state.list.splice(index, 1);
         },
-
     },
     actions: {
-
         addItem({commit}: { commit: Commit }, item:CanvasItem):void {
 
             console.log(item)
@@ -41,9 +39,6 @@ export default {
             console.log(item)
             commit("removeItem", item);
         },
-
     },
-
-
 }
 

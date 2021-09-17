@@ -8,8 +8,6 @@
         <div class="row">
             <div class="col-9 ">
                 <div class="border shadow-lg" style="position:relative; height: 600px; padding:0;">
-
-
                     <template v-for="item in list" :key="item.id">
                         <div
                             :style="{width:item.width+'px',height:item.height+'px',left:item.x+'px',top:item.y+'px'}"
@@ -98,18 +96,6 @@
 export default {
     name: "testing",
     mounted() {
-        console.log("mounted");
-
-        // just adding an item to test
-        // this.$store.dispatch("testing/addItem",{
-        //     id:"1",
-        //     label:"Testing 1",
-        //     width: 300,
-        //     height:100,
-        //     x: 400,
-        //     y: 200
-        // });
-
         // we reset the form. just in case.
         this.reset();
     },
