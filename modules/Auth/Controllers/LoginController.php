@@ -42,20 +42,35 @@ class LoginController {
                 "message" => "You are already logged in."
             );
         } else {
-            if ($this->LoginRepository->attempts($this->system->get("SETTINGS.auth.minutes")) < $this->system->get("SETTINGS.auth.attempts")) {
-                $data['messages'][] = array(
-                    "type" => "warning",
-                    "message" => "Use your full email address and network password (same as you use to log into windows)."
-                );
-                $data['active'] = true;
-            } else {
+
+            $attempts = $this->LoginRepository->attempts($this->system->get("SETTINGS.auth.minutes")) * 1;
+            $remaining = ($this->system->get("SETTINGS.auth.attempts") * 1) - $attempts;
+
+            if ($remaining <= 0) {
                 $data['messages'][] = array(
                     "type" => "error",
                     "message" => "Too many attempts. Try again later."
                 );
+            } elseif ($attempts) {
+                $data['messages'][] = array(
+                    "type" => "warning",
+                    "message" => "{$remaining} Attempts remaining"
+                );
+                $data['active'] = true;
+            } else {
+                 $data['messages'][] = array(
+                    "type" => "info",
+                    "message" => "Use your full email address and network password (same as you use to log into windows)."
+                );
+                 $data['active'] = true;
             }
+
+
         }
 
+        if ($request->getAttribute("USER") && $request->getAttribute("USER")->id()){
+            $data['user'] = $request->getAttribute("USER")->toSchema($this->userSchema);
+        }
 
         return $this->responder->withJson($response, $data);
     }
@@ -106,8 +121,15 @@ class LoginController {
         } else {
             $data['messages'][] = array(
                 "type" => "error",
-                "message" => "Login unsuccessful. {$remaining} Attempts remaining"
+                "message" => "Login unsuccessful."
             );
+            if ($remaining){
+                 $data['messages'][] = array(
+                    "type" => "warning",
+                    "message" => "{$remaining} Attempts remaining"
+                );
+            }
+
             $data['active'] = true;
         }
         // login failed

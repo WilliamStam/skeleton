@@ -51,7 +51,10 @@
                         </li>
                     </ul>
                      <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="user.id">
+                            <router-link :to="{name: 'auth-logout'}" class="nav-link">Logout</router-link>
+                        </li>
+                        <li class="nav-item" v-else>
                             <router-link :to="{name: 'auth-login'}" class="nav-link">Login</router-link>
                         </li>
                      </ul>
@@ -61,8 +64,14 @@
     </header>
 </template>
 <script>
+import {mapState} from "vuex";
+
 export default {
-    name: "PageMenu"
+    name: "PageMenu",
+     computed: mapState("user", {
+        user: state => state.user,
+        permissions: state => state.permissions,
+    }),
 };
 </script>
 <style lang="scss">

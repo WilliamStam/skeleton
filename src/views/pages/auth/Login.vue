@@ -66,11 +66,11 @@ export default {
 
 
     mounted() {
-        this.$store.dispatch("auth/login/load");
-        this.username = this.$store.state.auth.login.username;
+        this.$store.dispatch("auth/check");
+        this.username = this.$store.state.auth.username;
         this.save = localStorage.getItem('username') ? true : false;
     },
-    computed: mapState("auth/login", {
+    computed: mapState("auth", {
         messages: state => state.messages,
         active: state => state.active,
     }),
@@ -82,7 +82,7 @@ export default {
                 localStorage.removeItem('username')
             }
             if (this.username && this.password) {
-                this.$store.dispatch("auth/login/submit", {
+                this.$store.dispatch("auth/login", {
                     username: this.username,
                     password: this.password
                 });

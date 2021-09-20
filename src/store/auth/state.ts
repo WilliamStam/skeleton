@@ -1,7 +1,7 @@
 import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
-import {UserStateInterface} from "@/store/user";
+import {UserStateInterface} from "@/store/user/state";
 
 
 export interface ResponseMessagesInterface {

@@ -30,8 +30,7 @@ const requestInterceptor = (req: AxiosRequestAPIConfig): AxiosRequestAPIConfig =
     if (!req.key) {
         req.key = md5(req.url + "|" + req.method + "|" + req.data);
     }
-    const token = store.getters["auth/token"]
-
+    const token = store.getters["user/token"]
     if (token) {
         req.headers['Authorization'] = 'Bearer ' + token;
     }

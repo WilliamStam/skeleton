@@ -7,6 +7,7 @@ use App\Models\TestModel;
 use App\Repositories\TestRepository;
 use App\Responders\Responder;
 use App\Schemas\TestSchema;
+use Modules\Auth\Repositories\LogoutRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use System\Core\Profiler;
@@ -16,16 +17,18 @@ use System\Core\System;
 
 class LogoutController {
 
-    function __construct(System $System, Responder $responder) {
+    function __construct(System $System, Responder $responder, LogoutRepository $logoutRepository) {
         $this->system = $System;
         $this->responder = $responder;
+        $this->logoutRepository = $logoutRepository;
     }
 
     public function __invoke(Request $request, Response $response): Response {
 
 
         $data = array();
-        $data['version'] = $this->system->get("VERSION");
+
+        $this->logoutRepository->logout($request->getAttribute("TOKEN"));
 
 
 

@@ -42,7 +42,7 @@ class UserMiddleware {
                if (preg_match('/^Bearer\s(.*)$/', $token, $match) !== false) {
                     $user = $this->currentUser->getByToken($match[1]);
                     if ($user){
-                        $request = $request->withAttribute("AUTHORIZATION",$match[1]);
+                        $request = $request->withAttribute("TOKEN",$match[1]);
                         $request = $request->withAttribute("USER",$user);
                         $this->system->set("USER",$user);
                     }

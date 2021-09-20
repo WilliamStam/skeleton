@@ -46,7 +46,7 @@ export default {
             store.dispatch("api/addProfiler",profiler_item);
         }
 
-        store.dispatch("system/getSystemInfo");
+        // store.dispatch("system/getSystemInfo");
 
     },
     computed: {
