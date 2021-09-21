@@ -1,9 +1,0 @@
-#main-menu {
-    @extend .navbar, .navbar-expand-lg, .navbar-light, .bg-light;
-    .nav-item {
-        .router-link-active {
-            background: $primary;
-            color:$white;
-        }
-    }
-}

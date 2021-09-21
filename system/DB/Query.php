@@ -310,6 +310,9 @@ class Query {
         if (array_key_exists("limit",$query)){
             $this->setLimit($query['limit']);
         }
+        if (array_key_exists("group",$query)){
+            $this->setGroup($query['group']);
+        }
 
 
         return $this;

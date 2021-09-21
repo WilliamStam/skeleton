@@ -1,22 +1,20 @@
 import {createStore, Store} from 'vuex';
 import api from './api';
-// import system from './system';
-// import testing from './testing';
-import auth from './auth/state';
+import {Store as AuthStore} from '@/modules/auth';
+import {Store as AdminStore} from '@/modules/admin';
 import user from './user/state';
-import {State} from "@vue/runtime-core";
 
-export const store = createStore({
+const store = createStore({
     // adding modules in
     modules: {
         api,
-        // system,
-        // testing,
-
         user,
-        auth,
     },
 });
+
+store.registerModule('auth',AuthStore);
+store.registerModule('admin',AdminStore);
+
 
 export default store;
 

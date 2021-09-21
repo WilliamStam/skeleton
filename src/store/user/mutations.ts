@@ -2,11 +2,11 @@ import {UserStateInterface} from "./state";
 
 export default {
     TOKEN(state: UserStateInterface, token: string | false = false): void {
-        if (token){
+        if (token) {
             sessionStorage.setItem('user-token', token)
             state.token = token
         } else {
-             sessionStorage.removeItem('user-token')
+            sessionStorage.removeItem('user-token')
             state.token = ""
         }
 

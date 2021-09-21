@@ -5,7 +5,7 @@ namespace Modules\Auth\Repositories;
 
 use App\DB;
 use App\Models\AttemptsModel;
-use App\Models\UserCurrentModel;
+use App\Models\CurrentUserModel;
 use Psr\Log\LogLevel;
 use System\Core\Loggers;
 use System\Core\Profiler;

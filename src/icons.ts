@@ -6,6 +6,8 @@ import {
     faMinusSquare,
     faTrashAlt,
     faStopwatch,
+    faCheck,
+    faCogs,
 
 
 } from '@fortawesome/free-solid-svg-icons'
@@ -16,6 +18,8 @@ library.add(
     faMinusSquare,
     faTrashAlt,
     faStopwatch,
+    faCheck,
+    faCogs,
 )
 
 export default library;

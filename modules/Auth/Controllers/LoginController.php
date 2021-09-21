@@ -65,7 +65,6 @@ class LoginController {
                  $data['active'] = true;
             }
 
-
         }
 
         if ($request->getAttribute("USER") && $request->getAttribute("USER")->id()){
@@ -99,7 +98,6 @@ class LoginController {
 
 
                 $data['token'] = $this->LoginRepository->generateAndSaveToken($user);
-                $data['user'] = $user->toSchema($this->userSchema);
                 //            $data['user'] = $user->toSchema()
 
                 return $this->responder->withJson($response, $data);

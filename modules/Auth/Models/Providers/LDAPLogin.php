@@ -2,7 +2,7 @@
 
 namespace Modules\Auth\Models\Providers;
 
-use App\Models\UserCurrentModel;
+use App\Models\CurrentUserModel;
 use System\Core\Profiler;
 use System\Model\AbstractModel;
 use System\Model\QueryTrait;
@@ -20,7 +20,7 @@ class LDAPLogin implements LoginProviderInterface {
     }
 
 
-    public function __invoke(string $username, string $password) : ?UserCurrentModel {
+    public function __invoke(string $username, string $password) : ?CurrentUserModel {
         $profiler = $this->profiler->start(__CLASS__ . "::" . __FUNCTION__, __NAMESPACE__);
 
         $return = null;

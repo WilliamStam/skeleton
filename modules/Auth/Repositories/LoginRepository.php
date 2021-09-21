@@ -5,7 +5,7 @@ namespace Modules\Auth\Repositories;
 
 use App\DB;
 use App\Models\AttemptsModel;
-use App\Models\UserCurrentModel;
+use App\Models\CurrentUserModel;
 use Psr\Log\LogLevel;
 use System\Core\Loggers;
 use System\Core\Profiler;
@@ -94,7 +94,7 @@ class LoginRepository {
         return $return;
     }
 
-    public function generateAndSaveToken(UserCurrentModel $user) : string {
+    public function generateAndSaveToken(CurrentUserModel $user) : string {
         $profiler = $this->profiler->start(__CLASS__ . "::" . __FUNCTION__, __NAMESPACE__);
         $bytes = random_bytes(20);
         $token = (bin2hex($bytes));

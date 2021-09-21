@@ -4,14 +4,14 @@ namespace Modules\Auth\Schemas;
 use System\Schema\AbstractSchema;
 use System\Schema\SchemaInterface;
 
-use App\Models\UserCurrentModel;
+use App\Models\CurrentUserModel;
 
 class UserSchema extends AbstractSchema implements SchemaInterface {
     
 
     function __invoke(){
         /**
-         * @var UserCurrentModel
+         * @var CurrentUserModel
          */
         $item = $this->item;
 

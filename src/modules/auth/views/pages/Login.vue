@@ -15,7 +15,6 @@
                     </div>
 
 
-
                     <router-link :to="{name: 'auth.logout'}" class="btn btn-primary w-100 my-5">Logout</router-link>
                 </template>
                 <form @submit.prevent="submit()" v-else>

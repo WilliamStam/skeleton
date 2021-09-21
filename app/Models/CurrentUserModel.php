@@ -8,7 +8,7 @@ use System\Core\Collection;
 use System\DB\Query;
 
 
-class UserCurrentModel extends AbstractModel {
+class CurrentUserModel extends AbstractModel {
     use QueryTrait;
 
     protected $ID = null;
@@ -30,7 +30,7 @@ class UserCurrentModel extends AbstractModel {
         "
     );
 
-    public function getByToken(string $token) : ?UserCurrentModel {
+    public function getByToken(string $token) : ?CurrentUserModel {
         $profiler = $this->profiler->start(__CLASS__ . "::" . __FUNCTION__, __NAMESPACE__);
 
 

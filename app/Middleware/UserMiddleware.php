@@ -2,7 +2,7 @@
 
 namespace App\Middleware;
 
-use App\Models\UserCurrentModel;
+use App\Models\CurrentUserModel;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response;
@@ -13,7 +13,7 @@ use System\Core\System;
 use System\Core\Session;
 
 class UserMiddleware {
-    public function __construct(Profiler $Profiler,System $System, UserCurrentModel $currentUser) {
+    public function __construct(Profiler $Profiler,System $System, CurrentUserModel $currentUser) {
         $this->profiler = $Profiler;
         $this->system = $System;
         $this->currentUser = $currentUser;

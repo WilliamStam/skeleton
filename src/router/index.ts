@@ -1,42 +1,32 @@
 import {createRouter, createWebHistory, RouteRecordRaw} from "vue-router";
 import Home from "@/views/pages/Home.vue";
 import Errors from "@/router/errors";
-import Auth from "@/router/auth";
+
+import {Routes as AdminRoutes} from "@/modules/admin";
+import {Routes as AuthRoutes} from "@/modules/auth";
 
 const routes: Array<RouteRecordRaw> = [
     {
         path: "/",
-        name: "Home",
+        name: "home",
         component: Home,
     },
     {
         path: "/about/:id",
-        name: "About",
+        name: "about",
         props: true,
         component: () =>
-            import(/* webpackChunkName: "about" */ "../views/pages/About.vue"),
+            import(/* webpackChunkName: "front" */ "../views/pages/About.vue"),
     },
-    {
-        path: "/contact",
-        name: "Contact",
-        component: () =>
-            import(/* webpackChunkName: "about" */ "../views/pages/Contact.vue"),
-    },
-    {
-        path: "/test",
-        name: "Test",
-        component: () =>
-            import(/* webpackChunkName: "about" */ "../views/pages/Testing.vue"),
-    },
-
-    // add in route "modules" like so
-    ...Auth,
-    ...Errors,
-
-
 
 ];
 
+
+routes.push(...AdminRoutes);
+routes.push(...AuthRoutes);
+
+
+routes.push(...Errors);
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
