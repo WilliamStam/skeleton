@@ -2,13 +2,9 @@ const path = require("path");
 
 module.exports = {
     outputDir: "./web",
-    assetsDir: "./assets", // publicPath: 'http://skeleton.localhost/',
-    // publicPath: (window.webpackHotUpdate || (
-    //     process.env.NODE_ENV !== "production" &&
-    //     process.env.NODE_ENV !== "test" &&
-    //     typeof console !== "undefined"
-    //   )) ? '/' : 'http://skeleton.localhost/',
+    assetsDir: "./assets",
     chainWebpack: config => {
+        // use the /src/public folder instead of the ./public cause the root public belongs to php
         config.plugins.has("copy") && config.plugin("copy")
             .tap(([args]) => {
                 args[0].from = ("./src/public");
@@ -18,6 +14,7 @@ module.exports = {
         config
             .plugin("html")
             .tap(([args]) => {
+
                 args.template = "./src/public/index.html";
                 return [args];
             });
@@ -25,6 +22,7 @@ module.exports = {
     css: {
         loaderOptions: {
             sass: {
+                // make the variables scss file available to all .vue and .scss files. so just use the variable name wherever you need to
                 prependData: `@import "./src/assets/css/variables";`
             }
         }
