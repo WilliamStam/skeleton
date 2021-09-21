@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0cbae0"],{"4b62":function(e,c,t){"use strict";t.r(c);var n=t("7a23"),a={class:"container"},s=Object(n["h"])('<div class="row"><div class="col"><div class="error-404"><div class="alert alert-danger text-center"><h1 class="text-white">Page cannot be found</h1></div></div></div></div>',1),d=[s];function i(e,c){return Object(n["u"])(),Object(n["f"])("div",a,d)}const r={};r.render=i;c["default"]=r}}]);
+//# sourceMappingURL=chunk-2d0cbae0.ef7eb033.js.map

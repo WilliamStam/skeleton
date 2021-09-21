@@ -1,3 +1,7 @@
+# THIS PROJECT IS STILL HEAVILY A WIP
+
+Im still pretty much learning vue and how to integrate it.
+
 # PHP
 Install dependencies:
 `composer install`
@@ -32,13 +36,17 @@ run `npm install` to install the node modules necessary for the project.
 
 set the `debug` value to true in `config.php` for optional whoops error handling 
 
-the concept here is to develop the site in vuejs (`/src`) run `npm run serve` for developing on (creates a developer server with live reloading n stuff) 
+edit the `vue.config.js` files 
+```
+devServer: {
+        // This will forward any request that does not match a static file to localhost:3000
+        proxy: 'http://skeleton.localhost/'
+    }
 
-create a .env.local file int he root with
 ```
-VUE_APP_MEDIA=http://<php_part_url> 
-```
-as in `VUE_APP_MEDIA=http://skeleton.localhost` (this is where the php part loads. this is used for media() etc)
+to match your environment (all api endpoints use this as their base, as well as /media etc)
+
+the concept here is to develop the site in vuejs (`/src`) run `npm run serve` for developing on (creates a developer server with live reloading n stuff) 
 
 # Production
 
