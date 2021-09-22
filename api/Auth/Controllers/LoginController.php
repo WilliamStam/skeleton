@@ -1,35 +1,33 @@
 <?php
 
 
-namespace Modules\Auth\Controllers;
+namespace Api\Auth\Controllers;
 
 use App\DB;
-use App\Models\TestModel;
-use App\Repositories\TestRepository;
 use App\Responders\Responder;
-use App\Schemas\TestSchema;
-use Modules\Auth\LoginModel;
-use Modules\Auth\Repositories\LoginRepository;
-use Modules\Auth\Schemas\UserSchema;
+use Api\Auth\LoginModel;
+use Api\Auth\Repositories\LoginRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Log\LogLevel;
-use System\Core\Profiler;
-use System\Core\Session;
 use System\Core\System;
 
 
 class LoginController {
 
-    function __construct(System $System, Responder $responder, LoginRepository $LoginRepository, UserSchema $userSchema) {
+    function __construct(System $System, Responder $responder, LoginRepository $LoginRepository) {
         $this->system = $System;
         $this->responder = $responder;
         $this->LoginRepository = $LoginRepository;
-        $this->userSchema = $userSchema;
 
     }
 
 
+    /**
+     * @OA\Get(
+     *     path="/api/auth/login",
+     *     @OA\Response(response="200", description="Fetches current login status")
+     * )
+     */
     public function get(Request $request, Response $response): Response {
         $this->LoginRepository->setSession($request->getAttribute("SESSION")->id());
         $data = array();
@@ -58,21 +56,25 @@ class LoginController {
                 );
                 $data['active'] = true;
             } else {
-                 $data['messages'][] = array(
+                $data['messages'][] = array(
                     "type" => "info",
                     "message" => "Use your full email address and network password (same as you use to log into windows)."
                 );
-                 $data['active'] = true;
+                $data['active'] = true;
             }
 
         }
 
-        if ($request->getAttribute("USER") && $request->getAttribute("USER")->id()){
-            $data['user'] = $request->getAttribute("USER")->toSchema($this->userSchema);
-        }
 
         return $this->responder->withJson($response, $data);
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     @OA\Response(response="200", description="Login path")
+     * )
+     */
 
     public function post(Request $request, Response $response): Response {
 
@@ -121,8 +123,8 @@ class LoginController {
                 "type" => "error",
                 "message" => "Login unsuccessful."
             );
-            if ($remaining){
-                 $data['messages'][] = array(
+            if ($remaining) {
+                $data['messages'][] = array(
                     "type" => "warning",
                     "message" => "{$remaining} Attempts remaining"
                 );

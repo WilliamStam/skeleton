@@ -20,7 +20,13 @@
 
                     </ul>
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item dropdown border-start" :class="{'active': routeNameStartsWith('admin.')}">
+                        <li class="nav-item dropdown border-start" :class="{'active': routeNameStartsWith('admin.')}"
+                            v-if="hasSomePermissions([
+                                'test.perm.1',
+                                'test.perm.2',
+                                'test.perm.3',
+                            ])"
+                        >
                                 <a
                                     class="nav-link dropdown-toggle"
                                     href="#"
@@ -34,7 +40,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menu-admin-dropdown">
 
-                                    <li>
+                                    <li v-if="hasPermission('test.perm.1')">
                                         <router-link :to="{name: 'admin.roles'}" class="dropdown-item">Roles
                                         </router-link>
                                     </li>
@@ -69,13 +75,18 @@
         </nav>
     </header>
 </template>
-<script>
-import {mapState} from "vuex";
+<script lang="js">
+import {
+    mapGetters,
+    mapState
+} from "vuex";
 
 export default {
     name: "PageMenu",
     mounted() {
-        this.$store.dispatch("user/fetch");
+        if (!this.$store.state.user.fetched && !this.$store.state.user.fetching){
+            // this.$store.dispatch("user/fetch");
+        }
     },
     computed: {
         ...mapState("user", {
@@ -89,6 +100,17 @@ export default {
                 return this.$route.name.substr(0, string.length) === string;
             }
             return false;
+        },
+
+
+        hasPermission(permission) {
+            return this.$store.getters["user/hasPermission"](permission);
+        },
+        hasSomePermissions(permissions=[]) {
+            return this.$store.getters["user/hasSomePermissions"](permissions);
+        },
+        hasPermissions(permissions=[]) {
+            return this.$store.getters["user/hasPermissions"](permissions);
         }
     }
 };

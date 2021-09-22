@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Modules\Auth\Repositories;
+namespace Api\Auth\Repositories;
 
 use App\DB;
 use App\Models\AttemptsModel;
@@ -48,8 +48,8 @@ class LoginRepository {
         );
 
         foreach (array(
-            new \Modules\Auth\Models\Providers\LDAPLogin($this->DB,$this->profiler),
-            new \Modules\Auth\Models\Providers\LocalLogin($this->DB,$this->profiler),
+            new \Api\Auth\Models\Providers\LDAPLogin($this->DB,$this->profiler),
+            new \Api\Auth\Models\Providers\LocalLogin($this->DB,$this->profiler),
         ) as $provider){
 
             $user = $provider($username,$password);

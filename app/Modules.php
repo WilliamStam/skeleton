@@ -19,9 +19,8 @@ return function (App $app) {
 
 
     $modules = $container->get(Modules::class);
-    $modules->add(\Modules\System\Module::class);
-    $modules->add(\Modules\testing\Module::class);
-    $modules->add(\Modules\Auth\Module::class);
+    $modules->add(\Api\Auth\Module::class);
+    $modules->add(\Api\General\Module::class);
 
 
 

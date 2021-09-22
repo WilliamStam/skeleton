@@ -17,4 +17,10 @@ export default {
     PERMISSIONS(state: UserStateInterface, permissions: UserStateInterface['permissions'] = []): void {
         state.permissions = permissions
     },
+    FETCHING(state: UserStateInterface,status:boolean): void {
+        state.fetching = status
+    },
+    FETCHED(state: UserStateInterface): void {
+        state.fetched = true
+    },
 }

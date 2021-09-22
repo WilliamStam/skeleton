@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\System;
+namespace Api\General;
 use Psr\Container\ContainerInterface;
 use Slim\Routing\RouteCollectorProxy;
 use System\Module\AbstractModule;
@@ -11,7 +11,7 @@ class Module extends AbstractModule {
 
     function moduleRoutes(RouteCollectorProxy $module): void {
         $module->group("", function (RouteCollectorProxy $group) {
-           $group->get("",InfoController::class)->setName("system_info");
+           $group->get("/user",Controllers\UserController::class)->setName("general_user");
 
         });
 

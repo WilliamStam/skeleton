@@ -62,6 +62,7 @@ return function (App $app) {
         }
     });
 
+    $app->get("/api", Controllers\OpenAPIController::class);
     $app->options('/api', function ($request, $response) {
         return $response;
     });
@@ -81,5 +82,6 @@ return function (App $app) {
 
 
      $app->get("/{path:.*}", Controllers\VueController::class);
+
 };
 

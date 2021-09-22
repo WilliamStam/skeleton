@@ -27,18 +27,9 @@ use Psr\Http\Message\ResponseFactoryInterface;
 
 class VueController {
 
-    function __construct(Profiler $profiler, TestModel $testmodel, TestSchema $testschema, TestRepository $testRepository, System $System, Session $session, Responder $responder, ResponseFactoryInterface $responseFactory) {
-//        $this->modules = $modules;
-//        $this->logger = $logger;
-        $this->profiler = $profiler;
-        $this->testmodel = $testmodel;
-        $this->testschema = $testschema;
-        $this->testRepository = $testRepository;
-//        $this->modules = $modules;
-        $this->system = $System;
-        $this->session = $session;
+    function __construct(System $system,Responder $responder) {
+        $this->system = $system;
         $this->responder = $responder;
-        $this->responseFactory = $responseFactory;
     }
 
     public function __invoke(Request $request, Response $response): Response {
@@ -47,6 +38,7 @@ class VueController {
 
         $data['debug'] = $this->system->get("DEBUG");
         $data['session'] = $request->getAttribute("SESSION")->getId();
+
 
 
 

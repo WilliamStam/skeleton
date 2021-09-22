@@ -1,5 +1,5 @@
 import {Commit, Dispatch} from "vuex";
-import api from "@/composables/api";
+import api from "@/utilities/api";
 import {ResponseMessagesInterface} from "./state";
 
 

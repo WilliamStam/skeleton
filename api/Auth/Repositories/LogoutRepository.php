@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Modules\Auth\Repositories;
+namespace Api\Auth\Repositories;
 
 use App\DB;
 use App\Models\AttemptsModel;

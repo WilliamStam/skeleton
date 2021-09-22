@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Auth\Schemas;
+namespace Api\General\Schemas;
 
 use System\Schema\AbstractSchema;
 use System\Schema\SchemaInterface;

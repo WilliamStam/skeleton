@@ -39,6 +39,7 @@ export default {
         if (profiler_item.url){
             store.dispatch("api/addProfiler",profiler_item);
         }
+        this.$store.dispatch("user/fetch");
     },
     computed: {
         show_profiler(){

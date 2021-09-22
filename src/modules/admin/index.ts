@@ -1,8 +1,9 @@
 import {RouteRecordRaw} from "vue-router";
-import {useStore} from "@/store";
-import {createStore} from "vuex";
+
 
 import RolesStore from "./store/roles/state";
+
+
 
 export const Routes: Array<RouteRecordRaw> = [
     {
@@ -20,7 +21,7 @@ export const Routes: Array<RouteRecordRaw> = [
         component: () => import(/* webpackChunkName: "admin" */ "./views/pages/RolesCategories.vue"),
         // beforeEnter: requireAuth,
         meta: {
-            permission: 'test.perm.2'
+            permission: 'test.perm.3'
         }
     },
 ];

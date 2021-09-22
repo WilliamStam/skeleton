@@ -100,10 +100,16 @@ class Responder {
      *
      * @return ResponseInterface The response
      */
-    public function withTemplate(ResponseInterface $response, string $template, array $data = []): ResponseInterface
+    public function withTemplate(ResponseInterface $response, string $template, array $data = [], string $folder = ""): ResponseInterface
     {
         $profiler = $this->profiler->start($template, "Template");
-        $return = $this->phpRenderer->render($response, $template, $data);
+        $renderer = $this->phpRenderer;
+
+        if ($folder){
+            $renderer->setTemplatePath($folder);
+        }
+
+        $return = $renderer->render($response, $template, $data);
         $profiler->stop();
         return $return;
     }

@@ -1,6 +1,6 @@
 {
   "name": "frameworks/slim",
-  "description": "Slim Framework",
+  "description": "Slim Skeleton",
   "minimum-stability": "dev",
   "license": "proprietary",
   "version": "0.0.1",
@@ -28,15 +28,16 @@
     "laminas/laminas-escaper": "^2",
     "php-di/php-di": "^6",
     "psr/log": "^1",
+    "slim/php-view": "^3",
     "slim/psr7": "dev-master",
     "slim/slim": "^4",
-    "slim/php-view": "^3",
-    "zeuxisoo/slim-whoops": "^0.7"
+    "zeuxisoo/slim-whoops": "^0.7",
+    "zircote/swagger-php": "dev-master"
   },
   "autoload": {
     "psr-4": {
       "System\\": "system/",
-      "Modules\\": "modules/",
+      "Api\\": "api/",
       "App\\": "app/"
     }
   }

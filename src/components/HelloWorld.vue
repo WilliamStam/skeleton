@@ -141,7 +141,7 @@ import {
     Modal,
     Tab
 } from "bootstrap";
-import api from "@/composables/api";
+import api from "@/utilities/api";
 import {watch} from "vue";
 import {mapGetters} from "vuex";
 import ComponentName from "./demo.vue"

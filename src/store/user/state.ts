@@ -11,7 +11,9 @@ export interface UserStateInterface {
         name: string,
         email: string
     } | false,
-    permissions: string[]
+    permissions: string[] | undefined,
+    fetching: boolean,
+    fetched: boolean
 }
 
 export default {
@@ -20,7 +22,9 @@ export default {
     state: (): UserStateInterface => ({
         token: sessionStorage.getItem('user-token') || '',
         user: false,
-        permissions: []
+        permissions: undefined,
+        fetching: false,
+        fetched: false,
     }),
     actions,
     mutations,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Auth\Models\Providers;
+namespace Api\Auth\Models\Providers;
 
 use App\Models\CurrentUserModel;
 use System\Core\Profiler;
