@@ -10,12 +10,14 @@ use Api\Auth\Repositories\LoginRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use System\Core\System;
+use System\Core\Session;
 
 
 class LoginController {
 
-    function __construct(System $System, Responder $responder, LoginRepository $LoginRepository) {
+    function __construct(System $System, Responder $responder, LoginRepository $LoginRepository, Session $session) {
         $this->system = $System;
+        $this->session = $session;
         $this->responder = $responder;
         $this->LoginRepository = $LoginRepository;
 
@@ -100,6 +102,8 @@ class LoginController {
 
 
                 $data['token'] = $this->LoginRepository->generateAndSaveToken($user);
+
+                $this->session->set("token",$data['token']);
                 //            $data['user'] = $user->toSchema()
 
                 return $this->responder->withJson($response, $data);

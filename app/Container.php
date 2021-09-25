@@ -172,9 +172,6 @@ return [
                 "VERSION" => $package->version,
                 "PACKAGE" => $package->description,
                 "SETTINGS" => $settings,
-                "LOGS" => array(
-                    "errors" => $settings->get("cache.templates")
-                ),
                 "SESSION" => $container->get(Session::class),
                 "GET"=>$_GET,
                 "POST"=>$_POST
@@ -197,7 +194,7 @@ return [
     },
     Session::class => function (ContainerInterface $container) {
         $session = new Session(
-            new \System\Sessions\MySQLSessionHandler($container->get(\App\DB::class)),
+            new \App\Handlers\Sessions\MySQLSessionHandler($container->get(\App\DB::class)),
             $container->get(Profiler::class),
         );
 

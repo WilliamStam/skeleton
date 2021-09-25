@@ -6,10 +6,7 @@ use System\Utilities\Strings;
 use System\Core\System;
 
 abstract class AbstractModule implements ModuleInterface {
-    protected $web_directory = "Web";
-    protected $web_views = "Web\\views";
-    protected $web_static = "Web\\static";
-    protected $web_static_prefix = "static";
+
     protected $module_key;
 
 
@@ -42,25 +39,7 @@ abstract class AbstractModule implements ModuleInterface {
         return dirname($reflector->getFileName());
 
     }
-    function getViewPaths(){
-        return array(
-            Strings::fixDirSlashes($this->getPath() . "/" . $this->web_views),
-            Strings::fixDirSlashes($this->getPath(). "/" . $this->web_directory)
-        );
-    }
-    function getStaticUrl()  : string {
-        return $this->web_static_prefix;
-    }
-    function getStaticPaths() : string {
-        return Strings::fixDirSlashes($this->getPath() . "/" . $this->web_static);
-    }
-    function asset($asset) : string {
-        return Strings::fixDirSlashes($this->getStaticUrl() . "/" . $asset,"/");
-    }
-    function setStaticUrl(string $value) {
-        $this->web_static_prefix = $value;
-        return $this;
-    }
+
 
 
 }

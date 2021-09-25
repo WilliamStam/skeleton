@@ -1,7 +1,8 @@
 <?php
 
-namespace System\Sessions;
+namespace App\Handlers\Sessions;
 use System\Utilities\Info;
+use System\Sessions\SessionHandlerInterface;
 
 class MySQLSessionHandler implements SessionHandlerInterface {
     private $db;

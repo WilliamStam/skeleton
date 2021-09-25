@@ -13,9 +13,10 @@ use System\Core\System;
 use System\Core\Session;
 
 class UserMiddleware {
-    public function __construct(Profiler $Profiler,System $System, CurrentUserModel $currentUser) {
+    public function __construct(Profiler $Profiler,System $System, CurrentUserModel $currentUser, Session $session) {
         $this->profiler = $Profiler;
         $this->system = $System;
+        $this->session = $session;
         $this->currentUser = $currentUser;
     }
 
@@ -34,7 +35,7 @@ class UserMiddleware {
 
 
 //        setId
-        $token = $request->getHeader("Authorization");
+        $token = $request->getHeader("Authorization") ?? $this->session->get("token");
 
         if ($token && count($token)){
             $token = reset($token);

@@ -145,18 +145,7 @@ class System {
         return $input;
     }
 
-    function absolutePath($path="") : string {
-        $root = $this->get("ROOT");
-        $path = Strings::fixDirSlashes($root . DIRECTORY_SEPARATOR . $path);
-        $return = $path;
-//        $return = realpath(__DIR__ . DIRECTORY_SEPARATOR . '../../'.$path);
-        return $return;
-    }
 
-    static function error($code,$message){
-
-        var_dump([$code,$message]);
-    }
 
 
 
