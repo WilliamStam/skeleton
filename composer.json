@@ -15,7 +15,7 @@
     "sort-packages": true,
     "optimize-autoloader": true,
     "platform": {
-      "php": "7.4"
+      "php": "8.0"
     }
   },
   "require": {
@@ -24,6 +24,7 @@
     "ext-json": "*",
     "ext-pdo": "*",
     "ext-pdo_mysql": "*",
+    "illuminate/database": "8.x-dev",
     "intervention/image": "^2",
     "laminas/laminas-escaper": "^2",
     "php-di/php-di": "^6",
@@ -37,7 +38,7 @@
   "autoload": {
     "psr-4": {
       "System\\": "system/",
-      "Api\\": "api/",
+      "Modules\\": "modules/",
       "App\\": "app/"
     }
   }

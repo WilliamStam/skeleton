@@ -34,6 +34,7 @@ class ModuleMiddleware {
 
         $this->system->set("MODULE", $this->module);
         $this->container->set(ModuleInterface::class,$this->module);
+         $request = $request->withAttribute("MODULE",$this->module);
 
         $profiler->stop();
         $handler = $handler->handle($request);

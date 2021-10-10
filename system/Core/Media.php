@@ -24,30 +24,25 @@ class Media {
     }
 
 
-    function addHandler(FilesInterface $handler) : Media {
+    function addHandler(FilesInterface $handler): Media {
         $this->handlers[] = $handler;
 
         return $this;
     }
 
-    function handle(ServerRequestInterface $request,string $path): ResponseInterface {
+    function handle(ServerRequestInterface $request, string $path): ResponseInterface {
         $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-        foreach ($this->handlers as $handler){
-            if (in_array($ext,$handler->getHandleFileExtensions())){
-                return $handler->response($request,$this->response,$path);
+        foreach ($this->handlers as $handler) {
+            if (in_array($ext, $handler->getHandleFileExtensions())) {
+                return $handler->response($request, $this->response, $path);
             }
         }
-
-
-
 
 
         throw new ResourceNotFound("File not found: " . $request->getUri());
 
     }
-
-
 
 
 }

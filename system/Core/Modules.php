@@ -4,7 +4,7 @@ namespace System\Core;
 
 use System\Core\System;
 use System\Module\ModuleInterface;
-
+use System\Helpers\Collection;
 class Modules extends Collection {
 
 

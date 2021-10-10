@@ -3,7 +3,7 @@
 namespace System\Core;
 
 use Config;
-
+use System\Helpers\Collection;
 class Profiler extends Collection {
 
 
@@ -67,8 +67,9 @@ class Profiler extends Collection {
                 "data"=>$item->getData()
             );
 
-            if ($return_item['time']['offset'] + $return_item['time']['percent'] > 100){
-                $return_item['time']['offset'] = 100 - $return_item['time']['percent'];
+//            var_dump($return_item);
+            if (floatval($return_item['time']['offset']) + floatval($return_item['time']['percent']) > 100){
+                $return_item['time']['offset'] = 100 - floatval($return_item['time']['percent']);
             }
 
             $return_item['key'] = md5(json_encode($return_item));

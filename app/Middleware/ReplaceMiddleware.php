@@ -36,7 +36,7 @@ class ReplaceMiddleware {
      */
     public function __invoke(Request $request, RequestHandler $handler): Response {
 //        var_dump("replace start");
-$GLOBALS['output'](get_class($this) . " start");
+        $GLOBALS['output'](get_class($this) . " start");
 
         $response = $handler->handle($request);
 
@@ -50,9 +50,7 @@ $GLOBALS['output'](get_class($this) . " start");
 
         $body = (string)$response->getBody();
 
-        $this->replace->set("@@CSRF@@",$this->session->get("CSRF"));
-
-
+        $this->replace->set("@@CSRF@@", $this->session->get("CSRF"));
 
 
         $body = $this->replace->string($body);
@@ -61,7 +59,7 @@ $GLOBALS['output'](get_class($this) . " start");
             $response = $response->withBody($this->streamFactory->createStream($body));
         }
 
-$GLOBALS['output'](get_class($this) . " end");
+        $GLOBALS['output'](get_class($this) . " end");
 //        var_dump("replace end");
         $profiler->stop();
         return $response;

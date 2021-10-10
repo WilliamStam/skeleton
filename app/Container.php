@@ -29,8 +29,7 @@ use System\Core\Errors;
 use System\Core\Loggers;
 use System\Core\Session;
 use System\Core\Replace;
-
-use System\Model\ModelInterface;
+use System\Core\Permissions;
 
 
 use App\Responders\Responder;
@@ -38,7 +37,7 @@ use App\Responders\Responder;
 use System\Utilities\Arrays;
 use System\Utilities\Strings;
 
-use System\DB\Mysql;
+//use System\DB\Mysql;
 
 use App\ErrorHandler;
 use Psr\Log\LogLevel;
@@ -92,7 +91,8 @@ return [
         $root = dirname(__DIR__);
 
         $storage = Strings::fixDirSlashes($root . DIRECTORY_SEPARATOR . "/storage");
-        $assets = Strings::fixDirSlashes($root . DIRECTORY_SEPARATOR . "/web");
+        $assets = Strings::fixDirSlashes(realpath($root . "/../skeleton-vue/dist"));
+
 
         return (new Settings([
                 "debug" => false,
@@ -138,7 +138,7 @@ return [
                 // session options
                 'session' => array(
                     // session cookie name
-                    'name'=>'sid',
+                    'name' => 'sid',
                     // Lax will sent the cookie for cross-domain GET requests
                     'cookie_samesite' => 'Lax',
                     // Optional: Sent cookie only over https
@@ -147,11 +147,11 @@ return [
                     // Note: The cookie is not accessible for JavaScript!
                     'cookie_httponly' => false,
                 ),
-                'csrf'=>"csrf_test_name",
-                'auth'=>array(
+                'csrf' => "csrf_test_name",
+                'auth' => array(
                     // can fail 5 logins per 5 minutes
-                    'attempts'=>5,
-                    'minutes'=>5,
+                    'attempts' => 5,
+                    'minutes' => 5,
                 ),
 
             ]
@@ -173,8 +173,8 @@ return [
                 "PACKAGE" => $package->description,
                 "SETTINGS" => $settings,
                 "SESSION" => $container->get(Session::class),
-                "GET"=>$_GET,
-                "POST"=>$_POST
+                "GET" => $_GET,
+                "POST" => $_POST
             ]
             , $container->get(Profiler::class)
         ));
@@ -194,10 +194,10 @@ return [
     },
     Session::class => function (ContainerInterface $container) {
         $session = new Session(
-            new \App\Handlers\Sessions\MySQLSessionHandler($container->get(\App\DB::class)),
+            new \App\Handlers\Sessions\MySQLSessionHandler(),
             $container->get(Profiler::class),
         );
-
+//
         $session->setName(Strings::toAscii($container->get("PACKAGE")->description));
 
         $session_options = Arrays::merge(array(
@@ -230,6 +230,10 @@ return [
     Modules::class => function (ContainerInterface $container) {
         $modules = new Modules();
         return $modules;
+    },
+    Permissions::class => function (ContainerInterface $container) {
+        $permissions = new Permissions();
+        return $permissions;
     },
 
 //    Modules::class => function (ContainerInterface $container) {
@@ -266,30 +270,53 @@ return [
 
         $errors->addHandler(new Error(
             $loggers->getByLevel(\Psr\Log\LogLevel::DEBUG)->toArray(),
-            404,
-            "no page here, looser!"
+            array(
+                "code" => 400
+            ),
+        ), 400);
+
+        $errors->addHandler(new Error(
+            $loggers->getByLevel(\Psr\Log\LogLevel::DEBUG)->toArray(),
+            array(
+                "code" => 401
+            ),
+        ), 401);
+
+        $errors->addHandler(new Error(
+            $loggers->getByLevel(\Psr\Log\LogLevel::DEBUG)->toArray(),
+            array(
+                "code" => 403
+            ),
+        ), 403);
+
+        $errors->addHandler(new Error(
+            $loggers->getByLevel(\Psr\Log\LogLevel::DEBUG)->toArray(),
+            array(
+                "code" => 404
+            ),
         ), 404);
 
         $errors->addHandler(new Error(
             $loggers->getByLevel(\Psr\Log\LogLevel::NOTICE)->toArray(),
-            429,
-            "Slow down mac!"
+            array(
+                "code" => 429,
+                "message" => "Too Many Requests",
+                "title" => "429 Too Many Requests",
+                "description" => "The user has sent too many requests in a given amount of time."
+            ),
         ), 429);
-
-        $errors->addHandler(new Error(
-            $loggers->getByLevel(\Psr\Log\LogLevel::ERROR)->toArray(),
-            500,
-            "dafuk, YOU BROKE IT"
-        ), [500, 0]);
-
 
 
         $errors->setDefault(new Error(
             $loggers->getByLevel(\Psr\Log\LogLevel::ERROR)->toArray(),
-            500,
-            "Default Error"
+            array(
+                "code" => 500,
+                "message" => "Internal Server Error",
+                "title" => "500 Internal Server Error",
+                "description" => "The server died"
+            ),
+            true
         ));
-
 
 
         return $errors;
@@ -304,53 +331,59 @@ return [
             \Psr\Log\LogLevel::EMERGENCY
         ));
         $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::ALERT, array(
-           \Psr\Log\LogLevel::ALERT
+            \Psr\Log\LogLevel::ALERT
         ));
         $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::CRITICAL, array(
-           \Psr\Log\LogLevel::CRITICAL
+            \Psr\Log\LogLevel::CRITICAL
         ));
         $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::ERROR, array(
-           \Psr\Log\LogLevel::ERROR
+            \Psr\Log\LogLevel::ERROR
         ));
         $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::WARNING, array(
-           \Psr\Log\LogLevel::WARNING
+            \Psr\Log\LogLevel::WARNING
         ));
-        if ($system->get("DEBUG")){
+        if ($system->get("DEBUG")) {
             $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::NOTICE, array(
-               \Psr\Log\LogLevel::NOTICE
+                \Psr\Log\LogLevel::NOTICE
             ));
             $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::INFO, array(
-               \Psr\Log\LogLevel::INFO
+                \Psr\Log\LogLevel::INFO
             ));
             $logger->addHandler(new FunctionLogger($DBLogger), \Psr\Log\LogLevel::DEBUG, array(
-               \Psr\Log\LogLevel::DEBUG
+                \Psr\Log\LogLevel::DEBUG
             ));
         }
 
 
-            $logger->addHandler(new FunctionLogger($DBLogger), "auth", array());
+        $logger->addHandler(new FunctionLogger($DBLogger), "auth", array());
 
 
         return $logger;
     },
 
     "DBLogger" => function (ContainerInterface $container) {
-        $db = $container->get(\App\DB::class);
+//        $db = $container->get(\App\DB::class);
         $system = $container->get(System::class);
 
-        return function ($level, $message, $context) use ($db,$system) {
-            $db->exec("
-                INSERT INTO system_logs (
-                    `version`,`level`,`log`,`context`
-                ) VALUES (
-                    :VERSION,:LEVEL, :LOG,:CONTEXT
-                ) 
-            ",array(
-                ":VERSION"=> $system->get("VERSION"),
-                ":LEVEL"=> $level,
-                ":LOG"=> $message,
-                ":CONTEXT"=> json_encode($context,JSON_PRETTY_PRINT),
+        return function ($level, $message, $context) use ($system) {
+            \App\Models\SystemLogs::create(array(
+               "version"=>$system->get("VERSION"),
+               "level"=>$level,
+               "log"=>$message,
+               "context"=>json_encode($context,JSON_PRETTY_PRINT),
             ));
+//            $db->exec("
+//                INSERT INTO system_logs (
+//                    `version`,`level`,`log`,`context`
+//                ) VALUES (
+//                    :VERSION,:LEVEL, :LOG,:CONTEXT
+//                )
+//            ",array(
+//                ":VERSION"=> $system->get("VERSION"),
+//                ":LEVEL"=> $level,
+//                ":LOG"=> $message,
+//                ":CONTEXT"=> json_encode($context,JSON_PRETTY_PRINT),
+//            ));
         };
     },
 
@@ -381,15 +414,15 @@ return [
     },
 
 
-    \App\DB::class => function (ContainerInterface $container) {
-        $settings = $container->get(Settings::class);
-        return (new \App\DB($container->get(Profiler::class)))->connect(
-            'mysql:host=' . $settings->get("db.host") . ":" . $settings->get("db.port") . ';dbname=' . $settings->get("db.database"),
-            $settings->get("db.username"),
-            $settings->get("db.password"),
-            $settings->get("db.flags")
-        );
-    },
+//    \App\DB::class => function (ContainerInterface $container) {
+//        $settings = $container->get(Settings::class);
+//        return (new \App\DB($container->get(Profiler::class)))->connect(
+//            'mysql:host=' . $settings->get("db.host") . ":" . $settings->get("db.port") . ';dbname=' . $settings->get("db.database"),
+//            $settings->get("db.username"),
+//            $settings->get("db.password"),
+//            $settings->get("db.flags")
+//        );
+//    },
 
 
 ];

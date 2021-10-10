@@ -3,27 +3,14 @@
 
 namespace App\Controllers;
 
-use App\Schemas\TestSchema;
+use App\Models\SystemRoles;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use App\Models\TestModel;
-use Slim\Views\PhpRenderer;
-use System\Core\Profiler;
-use System\Core\Settings;
-use System\Core\Modules;
-use System\Core\Loggers;
 use System\Core\System;
-use System\Core\Session;
 
-use App\Repositories\TestRepository;
-use System\DB\Mysql;
-use System\Files\Handlers\Image2;
-use System\Loggers\FunctionLogger;
-use System\Module\ModuleInterface;
 use App\Responders\Responder;
 
-use Psr\Http\Message\ResponseFactoryInterface;
 
 class VueController {
 
@@ -37,13 +24,7 @@ class VueController {
         $data = array();
 
         $data['debug'] = $this->system->get("DEBUG");
-        $data['session'] = $request->getAttribute("SESSION")->getId();
-
-
-
-
-
-
+//        $data['session'] = $request->getAttribute("SESSION")->getId();
 
 
 

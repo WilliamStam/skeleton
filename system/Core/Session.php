@@ -126,8 +126,11 @@ class Session {
         $this->handler->write($this->getId(), json_encode((array)$this->data, JSON_PRETTY_PRINT));
     }
 
-    public function get(string $key, $default = null) {
+    public function __get($key) {
+        return  $this->get($key) ;
+    }
 
+    public function get(string $key, $default = null) {
         return $this->has($key) ? $this->data[$key] : $default;
     }
 

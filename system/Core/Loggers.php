@@ -8,6 +8,7 @@ use Psr\Log\LogLevel;
 use System\Exceptions\LoggerNotFound;
 use System\Utilities\Arrays;
 use System\Utilities\Strings;
+use System\Helpers\Collection;
 
 
 class Loggers implements \IteratorAggregate {

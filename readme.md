@@ -162,4 +162,15 @@ CREATE TABLE IF NOT EXISTS `system_users` (
   PRIMARY KEY (`id`),
   KEY `active` (`active`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+CREATE TABLE IF NOT EXISTS `system_roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) DEFAULT NULL,
+  `role` varchar(250) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`)
+)
 ```

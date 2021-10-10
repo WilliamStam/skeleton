@@ -43,6 +43,8 @@ class SessionMiddleware {
         //    $this->get(System::class)->set("ROUTE", $route);
         $profiler->stop();
 
+
+
         $request = $request->withAttribute("SESSION",$this->session);
         $handler = $handler->handle($request);
 

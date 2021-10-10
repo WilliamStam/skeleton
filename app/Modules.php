@@ -11,6 +11,7 @@ use System\Core\System;
 use System\Core\Modules;
 use System\Core\Assets;
 use System\Core\Profiler;
+use System\Core\Permissions;
 
 use System\Utilities\Strings;
 
@@ -19,8 +20,10 @@ return function (App $app) {
 
 
     $modules = $container->get(Modules::class);
-    $modules->add(\Api\Auth\Module::class);
-    $modules->add(\Api\General\Module::class);
+    $modules->add(\Modules\Auth\Module::class);
+    $modules->add(\Modules\Admin\Module::class);
+    $modules->add(\Modules\Info\Module::class);
+//    $modules->add(\Modules\Testing\Module::class);
 
 
 
@@ -37,6 +40,9 @@ return function (App $app) {
                 $module->moduleRoutes($group);
             })->add(new ModuleMiddleware($module, $container->get(System::class), $container, $container->get(Profiler::class)))
             ;
+        }
+        if (method_exists($module, "modulePermissions")) {
+           $module->modulePermissions($container);
         }
 
     }

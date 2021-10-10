@@ -1,5 +1,5 @@
 <?php
-namespace system\db;
+namespace System\DB;
 class Query {
     protected $DB = null;
     protected

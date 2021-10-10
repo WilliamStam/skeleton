@@ -13,6 +13,8 @@ use function http_build_query;
  * A generic responder.
  */
 class Responder {
+    const STATUS_SUCCESS = "success";
+    const STATUS_FAILED = "failed";
 
     private RouteParserInterface $routeParser;
 

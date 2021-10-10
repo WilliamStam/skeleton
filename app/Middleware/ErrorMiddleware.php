@@ -52,9 +52,30 @@ class ErrorMiddleware {
 
 
 
-            $response = $this->responder->withJson($this->responseFactory->createResponse($error->getCode(),$error->getMessage()),array(
+            $payload = array(
                 "code"=>$error->getCode(),
                 "message"=>$error->getMessage(),
+                "title"=>$error->getTitle(),
+                "description"=>$error->getDescription(),
+            );
+
+
+            if ($this->system->get("DEBUG")){
+                 $payload = array(
+                    "code"=>$error->getCode(),
+                    "message"=>$e->getMessage(),
+                    "title"=>$error->getTitle(),
+                    "description"=>$e->getFile() . ":" . $e->getLine(),
+                );
+            }
+
+
+
+            $response = $this->responder->withJson($this->responseFactory->createResponse($error->getCode(),$error->getMessage()),array(
+                "status"=>"error",
+                "data"=>$payload,
+                "messages"=>array(),
+                "errors"=>array(),
             ));
 
             if (property_exists($e,"headers")){
@@ -62,6 +83,7 @@ class ErrorMiddleware {
                     $response = $response->withHeader($header,$value);
                 }
             }
+
 
             $profiler->stop();
         }

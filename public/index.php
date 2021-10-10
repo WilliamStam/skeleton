@@ -6,6 +6,5 @@ $GLOBALS['output'] = function ($line) {
 };
 
 
-
 (require __DIR__ . '/../app/Application.php')->run();
 //var_dump("index.php",((double)microtime(TRUE) - $start) * 1000);

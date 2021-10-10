@@ -24,10 +24,9 @@ class Errors implements \IteratorAggregate {
     }
 
     function getByCode($code): ErrorInterface {
-        $code = (int)$code;
 
         foreach (array_reverse($this->handlers) as $handler) {
-            if ($code == $handler->getCode() || in_array($code, $handler->getAliasCodes())) {
+            if (strtoupper($code) == strtoupper($handler->getCode()) || in_array($code, $handler->getAliasCodes())) {
                 return $handler->getHandler();
             }
         }

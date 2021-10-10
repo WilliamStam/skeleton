@@ -36,11 +36,16 @@ $app = $container->get(App::class);
 
 // Register middleware
 (require __DIR__ . '/Middleware.php')($app);
-
-// Register modules
+//
+//// Register modules
 (require __DIR__ . '/Modules.php')($app);
-
-// Register routes
+//
+//// Register routes
 (require __DIR__ . '/Routes.php')($app);
+//
+//
+(require __DIR__ . '/DB.php')($app);
+
+
 
 return $app;

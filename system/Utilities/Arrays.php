@@ -104,5 +104,48 @@ class Arrays {
         return array_key_exists($key, $data) ? $data[$key] : $default;
     }
 
+    static function hierarchy(array $array, $idKeyName = 'id', $parentIdKey = 'parent_id', $childNodesField = 'children') {
+        $indexed = array();
+        // first pass - get the array indexed by the primary id
+        foreach ($array as $row) {
+            $indexed[$row[$idKeyName]] = $row;
+            $indexed[$row[$idKeyName]][$childNodesField] = array();
+        }
+        // second pass
+        $root = array();
+        foreach ($indexed as $id => $row) {
+
+
+            $indexed[$row[$parentIdKey]][$childNodesField][$id] = &$indexed[$id];
+
+
+            if (!$row[$parentIdKey]) {
+
+                $root[$id] = &$indexed[$id];
+
+            }
+        }
+        return $root;
+    }
+    static function hierarchyCounter($arr,$countField="counter",$countNodes="items",$childNodesField="children") {
+        $result = array();
+
+        foreach ($arr as $item) {
+            if ($countNodes){
+                $item[$countField] = count($item[$countNodes]);
+            }
+
+            $item[$childNodesField] = self::hierarchyCounter($item[$childNodesField],$countField,$countNodes,$childNodesField);
+
+            foreach ($item[$childNodesField] as $c) {
+                $item[$countField] = $item[$countField] + $c[$countField];
+            }
+
+            $result[] = $item;
+        }
+
+        return $result;
+    }
+
 
 }

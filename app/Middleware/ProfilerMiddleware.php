@@ -71,6 +71,11 @@ class ProfilerMiddleware {
 //            $response = $response->withHeader("x-profiler-memory", $this->profiler->getTotalMemory());
         }
 
+//        $queries = \App\DB::getQueryLog();
+//var_dump($queries);
+//exit();
+
+
         $GLOBALS['output'](get_class($this) . " end");
 //        var_dump("profiler end");
         return $response;

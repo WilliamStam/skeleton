@@ -3,33 +3,36 @@
 
 namespace App\Controllers;
 
-use App\Schemas\TestSchema;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use App\Models\TestModel;
-use Slim\Views\PhpRenderer;
 use System\Core\Profiler;
-use System\Core\Settings;
-use System\Core\Modules;
-use System\Core\Loggers;
 use System\Core\System;
-use System\Core\Session;
 
-use App\Repositories\TestRepository;
-use System\DB\Mysql;
-use System\Files\Handlers\Image2;
-use System\Loggers\FunctionLogger;
-use System\Module\ModuleInterface;
 use App\Responders\Responder;
 
-use Psr\Http\Message\ResponseFactoryInterface;
 use System\Utilities\Strings;
 
+/**
+ * @OA\OpenApi(
+ *    security={{"bearerAuth": {}}}
+ * )
+ *
+ * @OA\Components(
+ *     @OA\SecurityScheme(
+ *         securityScheme="bearerAuth",
+ *         type="http",
+ *         scheme="bearer",
+ *     )
+ * )
+ */
 
 /**
  * @OA\Info(title="", version="")
  */
+
+
+
 
 class OpenAPIController {
 
@@ -43,9 +46,10 @@ class OpenAPIController {
         $GLOBALS['output'](get_class($this) . "");
         $data = array();
 
+        $path = "{$request->getUri()->getScheme()}://{$request->getUri()->getHost()}/";
 
         $api_sources = array(
-            $this->system->get("ROOT") . DIRECTORY_SEPARATOR . "api",
+            $this->system->get("ROOT") . DIRECTORY_SEPARATOR . "modules",
             $this->system->get("ROOT") . DIRECTORY_SEPARATOR . "app"
         );
 
@@ -53,8 +57,15 @@ class OpenAPIController {
         $spec = json_decode(($openapi->toJson()),true);
         $spec['info']['title'] = $this->system->get("PACKAGE");
         $spec['info']['version'] = $this->system->get("VERSION");
+        $spec['servers'] = array(
+            array(
+                "url"=>"$path",
+                "description"=>"Main API"
+            )
+        );
 
-//         $this->system->debug($spec);
+//         $this->system->debug($request->getUri());
+//         $this->system->debug($path,$spec);
         $data['spec'] = ($spec);
 
 

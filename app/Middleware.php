@@ -2,17 +2,10 @@
 
 use Slim\App;
 
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
-use Slim\Factory\AppFactory;
-use Slim\Psr7\Response;
-
-
-use \Slim\Interfaces\RouteCollectorInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
 use Zeuxisoo\Whoops\Slim\WhoopsMiddleware;
-
+use Psr\Http\Message\StreamFactoryInterface;
+use Slim\Interfaces\RouteCollectorInterface;
 
 
 use App\Middleware\ReplaceMiddleware;
@@ -52,10 +45,10 @@ return function (App $app) {
         $container->get(System::class)->get("DEBUG"),
         $container->get(Profiler::class),
     ));
-
-//    $app->add(ReplaceMiddleware::class);
+//
+    $app->add(ReplaceMiddleware::class);
     $app->add(CorsMiddleware::class);
-
+//
     $app->add(UserMiddleware::class);
 
 
@@ -67,6 +60,8 @@ return function (App $app) {
             $showWhoops = false;
     }
 
+
+
     if ((bool)$showWhoops) {
         $app->add(new WhoopsMiddleware(array(
             'enable' => true,
@@ -74,11 +69,7 @@ return function (App $app) {
                 return "http://localhost:8091?message=%file:%line";
             },
         )));
-        // handler->addEditor( 'phpstorm', 'http://localhost:8091?message=%file:%line' );).
     } else {
-
-
-
         $app->add(ErrorMiddleware::class);
     }
 
@@ -87,16 +78,16 @@ return function (App $app) {
          $container->get(Profiler::class),
         $container->get(System::class),
     ));
-
-//    $app->add(new ReplaceMiddleware(
-//        $container->get(Replace::class),
-//        $container->get(RouteCollectorInterface::class),
-//        $container->get(StreamFactoryInterface::class),
-//        $container->get(Profiler::class),
-//        $container->get(Session::class),
-//    ));
-
-
+//
+    $app->add(new ReplaceMiddleware(
+        $container->get(Replace::class),
+        $container->get(RouteCollectorInterface::class),
+        $container->get(StreamFactoryInterface::class),
+        $container->get(Profiler::class),
+        $container->get(Session::class),
+    ));
+//
+//
     $app->add(new ProfilerMiddleware(
         $container->get(Profiler::class),
         $container->get(System::class),
@@ -105,34 +96,4 @@ return function (App $app) {
     ));
 
 
-
-    // Define Custom Error Handler
-//    $customErrorHandler = function (
-//        ServerRequestInterface $request,
-//        Throwable $exception,
-//        bool $displayErrorDetails,
-//        bool $logErrors,
-//        bool $logErrorDetails
-//    ) use ($app) {
-//
-//        var_dump($exception->getMessage());
-//        exit();
-//        $payload = ['error' => $exception->getMessage()];
-//
-//        $response = $app->getResponseFactory()->createResponse();
-//        $response->getBody()->write(
-//            json_encode($payload, JSON_UNESCAPED_UNICODE)
-//        );
-//
-//        return $response;
-//    };
-//
-//    // Add Error Middleware
-//    $errorMiddleware = $app->addErrorMiddleware(true, true, true);
-//    $errorMiddleware->setDefaultErrorHandler($customErrorHandler);
-
-
-
-//    $errorMiddleware = $app->addErrorMiddleware(true, true, true);
-//    $errorMiddleware->setDefaultErrorHandler($customErrorHandler);
 };

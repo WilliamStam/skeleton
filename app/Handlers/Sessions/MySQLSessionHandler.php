@@ -1,61 +1,57 @@
 <?php
 
 namespace App\Handlers\Sessions;
+use App\Models\SystemSessions;
 use System\Utilities\Info;
 use System\Sessions\SessionHandlerInterface;
 
-class MySQLSessionHandler implements SessionHandlerInterface {
-    private $db;
 
-    public function __construct($DB) {
-        $this->db = $DB;
+class MySQLSessionHandler implements SessionHandlerInterface {
+
+
+    public function __construct() {
+
     }
 
 
 
     public function read($session_id) : string {
+
+
+
         try {
-            $session = $this->db->exec("SELECT * FROM system_sessions WHERE session_id = :SESSION",array(
-                "SESSION"=>$session_id
-            ))->first();
-            return $session['data'] ?? '';
+
+            $session = SystemSessions::query()
+                ->where("session_id","=",$session_id)
+                ->get()
+                ->first();
+
+
+            return $session->data ?? "";
+
+
+//            $session = $this->db->exec("SELECT * FROM system_sessions WHERE session_id = :SESSION",array(
+//                "SESSION"=>$session_id
+//            ))->first();
+//            return $session['data'] ?? '';
         } catch (Exception $e) {
             return '';
         }
+
+        return '';
     }
 
     public function write($session_id, $session_data) : bool {
         try {
 
-            $this->db->exec("
-                INSERT INTO system_sessions (
-                    `session_id`, 
-                    `data`, 
-                    `ip`, 
-                    `proxy_ip`, 
-                    `agent`, 
-                    `timestamp`
-                ) VALUES (
-                    :SESSION,
-                    :DATA,
-                    :IP,
-                    :PROXY_IP,
-                    :AGENT,
-                    UNIX_TIMESTAMP()
-                ) ON DUPLICATE KEY UPDATE 
-                    `data` = VALUES(`data`),
-                    `ip` = VALUES(`ip`),
-                    `proxy_ip` = VALUES(`proxy_ip`),
-                    `agent` = VALUES(`agent`),
-                    `timestamp` = VALUES(`timestamp`)
-            
-            ", array(
-                "SESSION" => $session_id,
-                "DATA" => $session_data,
-                "IP" => Info::ip(),
-                "PROXY_IP" => Info::proxy_ip(),
-                "AGENT" => Info::agent(),
-            ));
+//             var_dump($session_data);
+//            exit();
+            SystemSessions::upsert(
+
+                ['session_id' => $session_id,'data'=>$session_data,"ip"=>Info::ip(),"proxy_ip"=>Info::proxy_ip(),"agent"=>Info::agent()],
+                ['session_id' => $session_id],
+                ["ip"=>Info::ip(),"proxy_ip"=>Info::proxy_ip(),"agent"=>Info::agent()],
+            );
 
             return TRUE;
         } catch (Exception $e) {
@@ -63,13 +59,26 @@ class MySQLSessionHandler implements SessionHandlerInterface {
         }
     }
 
-    public function destroy($sessionId) : bool {
+    public function destroy($session_id) : bool {
         try {
-            $this->db->exec("DELETE FROM sessions WHERE session_id = :SESSION",array(
-                "SESSION"=>$sessionId
-            ));
-
+             SystemSessions::destroy($session_id);
             return TRUE;
+        } catch (Exception $e) {
+            return FALSE;
+        }
+    }
+
+    public function gc(int $max_lifetime) : int|false {
+        try {
+//            SystemSessions::destroy($session_id)
+
+//                $users = User::where('updated_at', '>', \Carbon\Carbon::now()->subSeconds(5)->toDateTimeString())->get();
+
+                $users = SystemSessions::where('updated_at', '<', \App\DB::raw('now'))->delete();
+                var_dump($max_lifetime);
+                var_dump($users);
+                exit();
+
         } catch (Exception $e) {
             return FALSE;
         }
